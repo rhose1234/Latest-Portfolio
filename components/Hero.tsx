@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion";
 import Photo from "@/components/ui/Photo";
 import { ME, ROLES } from "@/lib/data";
 import { btnPinkSm, wrap } from "@/lib/styles";
@@ -79,9 +79,13 @@ export default function Hero() {
   );
 }
 
+/** The top of the rope, 220px above the card: the lanyard swings around this point. */
+const PIVOT = "50% -220px";
+
 function IdCard({ reduce }: { reduce: boolean }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [hasAutoFlipped, setHasAutoFlipped] = useState(false);
+  const swing = useMotionValue(0);
 
   // Auto flip once after 2 seconds
   useEffect(() => {
@@ -99,11 +103,28 @@ function IdCard({ reduce }: { reduce: boolean }) {
 
   return (
     <motion.div
-      className="relative"
+      className="relative z-10"
       initial={{ y: -600, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 80, damping: 15, mass: 1.5, delay: 0.3 }}
     >
+      {/* Rope, clip and card swing as one piece around the top of the rope, so the card can't come off it.
+          Drag sideways to swing it (it springs back when let go); tap to flip. The photo ignores the pointer so the
+          browser doesn't start dragging the image instead. */}
+      <motion.div
+        className="relative cursor-grab touch-pan-y select-none active:cursor-grabbing [&_img]:pointer-events-none"
+        style={{ rotate: swing, transformOrigin: PIVOT }}
+        onPan={(_, info) => swing.set(Math.max(-15, Math.min(15, -info.offset.x / 10)))}
+        onPanEnd={() => animate(swing, 0, { type: "spring", stiffness: 120, damping: 6 })}
+        onTap={(event) => {
+          if (!(event.target as Element).closest("a")) setIsFlipped((flipped) => !flipped);
+        }}
+      >
+      <motion.div
+        style={{ transformOrigin: PIVOT }}
+        animate={reduce ? undefined : { rotate: [0, -2, 2, -1.5, 1.5, -1, 1, 0] }}
+        transition={{ rotate: { repeat: Infinity, duration: 4, ease: "easeInOut", repeatDelay: 1, delay: 1.5 } }}
+      >
       {/* Pink Lanyard Rope */}
       <div
         aria-hidden
@@ -125,25 +146,8 @@ function IdCard({ reduce }: { reduce: boolean }) {
       </div>
 
       <motion.div
-        className="relative w-[min(240px,60vw)] origin-top cursor-grab pt-[50px] active:cursor-grabbing"
-        animate={{
-          rotate: [0, -2, 2, -1.5, 1.5, -1, 1, 0]
-        }}
-        transition={{
-          rotate: {
-            repeat: Infinity,
-            duration: 4,
-            ease: "easeInOut",
-            repeatDelay: 1,
-            delay: 1.5
-          }
-        }}
-        drag
-        dragConstraints={{ left: -60, right: 60, top: 0, bottom: 60 }}
-        dragElastic={0.25}
-        whileDrag={{ rotate: 4, scale: 1.05 }}
+        className="relative w-[min(240px,60vw)] pt-[50px]"
         whileHover={{ scale: 1.02 }}
-        onClick={() => setIsFlipped(!isFlipped)}
         style={{ perspective: 1000 }}
       >
         <motion.div
@@ -228,6 +232,8 @@ function IdCard({ reduce }: { reduce: boolean }) {
             </div>
           </div>
         </motion.div>
+      </motion.div>
+      </motion.div>
       </motion.div>
     </motion.div>
   );
