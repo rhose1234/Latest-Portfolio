@@ -24,7 +24,7 @@ export const STATS: Stat[] = [
   { n: 4, s: "", l: "Brands for UGC" },
 ];
 
-export const TOOLS = ["Next.js", "React js", "Javascript", "TypeScript", "Tailwind", "Bootstrap", "HTML", "CSS", "Wordpress", "Java", "MSSQL", ];
+export const TOOLS = ["Next.js", "React js", "Javascript", "TypeScript", "Tailwind", "Bootstrap", "HTML", "CSS", "Wordpress", "Shopify", "Java", "MSSQL", ];
 
 export const UGC_SKILLS = ["Content Creator", "UGC Creator", "User-Generated Content"];
 
