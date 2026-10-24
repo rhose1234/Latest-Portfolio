@@ -18,7 +18,7 @@ const FACE = "relative col-start-1 row-start-1 min-h-[180px] rounded-[22px] p-5 
 
 export default function UgcBrands() {
   return (
-    <section id="ugc" className="pb-12 pt-32">
+    <section id="ugc" className="py-12 md:py-16">
       <div className={wrap}>
         <Reveal>
           <div className="flex items-end justify-between gap-4">
@@ -122,10 +122,11 @@ function Tag({ index, front, back }: TagProps) {
 
   return (
     <motion.li
-      className="relative w-[min(260px,72vw)] shrink-0 snap-start md:w-auto"
+      className="relative w-[min(240px,66vw)] shrink-0 snap-start md:w-auto"
       initial={reduce ? false : { y: -40, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
+      // Only the vertical margin, so a tag peeking in from the side of the mobile row still shows
+      viewport={{ once: true, margin: "-60px 0px" }}
       transition={{ type: "spring", stiffness: 90, damping: 12, delay: index * 0.12 }}
     >
       {/* This tag's stretch of the rail; neighbouring stretches meet across the gap */}
