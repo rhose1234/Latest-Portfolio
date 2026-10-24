@@ -58,18 +58,21 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
+          {/* Two lines, the lower one shorter, that turn into an × when the menu opens */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="ml-auto flex md:hidden items-center justify-center text-light-red"
-            aria-label="Toggle menu"
+            className="relative ml-auto flex size-10 items-center justify-center rounded-full bg-light-red/10 transition hover:bg-light-red/20 md:hidden"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
           >
-            <svg className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              {isMobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
+            <span
+              aria-hidden
+              className={`absolute h-0.5 w-5 rounded-full bg-light-red transition duration-300 ${isMobileMenuOpen ? "rotate-45" : "-translate-y-[4px]"}`}
+            />
+            <span
+              aria-hidden
+              className={`absolute h-0.5 rounded-full bg-light-red transition-all duration-300 ${isMobileMenuOpen ? "w-5 -rotate-45" : "w-3 translate-x-1 translate-y-[4px]"}`}
+            />
           </button>
         </div>
       </nav>
