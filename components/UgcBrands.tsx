@@ -36,7 +36,8 @@ export default function UgcBrands() {
           <p className="mt-3 max-w-[52ch] text-[15px] leading-normal md:text-[17px]">Short-form videos made for real brands. Tap a card to watch them.</p>
         </Reveal>
 
-        <ul className="mt-14 grid grid-cols-2 gap-x-4 gap-y-8 md:gap-x-6 lg:grid-cols-4">
+        {/* Phones: one row that scrolls sideways, full-bleed past the page gutter. Tablet and up: a grid. */}
+        <ul className="scrollbar-hide -mx-7 mt-14 flex snap-x snap-mandatory scroll-px-7 gap-x-4 overflow-x-auto px-7 pb-10 md:mx-0 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-8 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
           {UGC_BRANDS.map((brand, i) => {
             const tone = `${TONES[i % TONES.length]} ${PAPER}`;
             const page = `/ugc/${brand.slug}`;
@@ -121,7 +122,7 @@ function Tag({ index, front, back }: TagProps) {
 
   return (
     <motion.li
-      className="relative"
+      className="relative w-[min(260px,72vw)] shrink-0 snap-start md:w-auto"
       initial={reduce ? false : { y: -40, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true, margin: "-60px" }}
