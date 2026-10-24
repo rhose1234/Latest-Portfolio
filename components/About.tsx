@@ -6,7 +6,7 @@ import { wrap } from "@/lib/styles";
 
 export default function About() {
   return (
-    <section id="about" className="pb-24 pt-36">
+    <section id="about" className="py-12 md:py-16">
       <div className={`${wrap} grid items-center gap-16 md:grid-cols-[1fr_1.1fr]`}>
         <Reveal>
           <div className="relative h-[420px] md:h-[520px]">

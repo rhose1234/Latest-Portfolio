@@ -4,7 +4,7 @@ import { wrap } from "@/lib/styles";
 
 export default function Roles() {
   return (
-    <section className="pb-28 pt-10">
+    <section className="pb-12 pt-4 md:pb-16">
       <div className={wrap}>
         {ROLES.map((role) => (
           <Reveal key={role.title}>

@@ -35,7 +35,7 @@ export default function Reviews() {
   const slide = (direction: 1 | -1) => row.current?.scrollBy({ left: direction * 332, behavior: "smooth" });
 
   return (
-    <section id="reviews" className="pb-24 pt-16">
+    <section id="reviews" className="py-12 md:py-16">
       <div className={wrap}>
         <Reveal>
           <div className="flex items-end justify-between gap-4">

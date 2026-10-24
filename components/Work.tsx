@@ -49,7 +49,7 @@ export default function Work() {
   const filteredProjects = WORK.filter((project) => project.category === activeCategory);
 
   return (
-    <section id="work" className="pb-24 pt-16">
+    <section id="work" className="py-12 md:py-16">
       <div className={wrap}>
         <h2 className="text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:text-[clamp(32px,5vw,72px)]">My Projects</h2>
         <p className="mt-3 max-w-[52ch] text-[15px] leading-normal md:text-[17px]">

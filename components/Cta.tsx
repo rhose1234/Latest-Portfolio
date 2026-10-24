@@ -13,7 +13,7 @@ export default function Cta() {
   ];
 
   return (
-    <section id="contact" className="rounded-t-[48px] bg-crimson py-28 text-center text-light-red">
+    <section id="contact" className="rounded-t-[48px] bg-crimson py-20 text-center text-light-red md:py-24">
       <div className={wrap}>
         <Reveal>
           <h2 className="text-[clamp(54px,10vw,150px)] font-extrabold leading-[.95] tracking-tighter text-white">

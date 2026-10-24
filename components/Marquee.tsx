@@ -30,7 +30,7 @@ function Band({ label, items, className, dot, duration, reverse = false }: BandP
 export default function Marquee() {
   return (
     // Both ribbons share one grid cell so they cross; the padding leaves room for the tilt.
-    <div className="grid grid-cols-1 overflow-hidden py-20">
+    <div className="grid grid-cols-1 overflow-hidden py-16">
       <Band
         label="Content creation"
         items={UGC_SKILLS}
