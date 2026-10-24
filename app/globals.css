@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Space+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+/* Brand tokens: usable as bg-crimson, text-light-red, border-vivid-pink, font-sans, animate-marquee ... */
+@theme {
+  --color-light-red: #ffe5e3;
+  --color-crimson: #0c0003;
+  --color-crimson-loading: #2a0a12;
+  --color-vivid-pink: #ea045d;
+
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+
+  --animate-marquee: marquee 30s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { background: var(--color-light-red); color: var(--color-crimson); }
+  :focus-visible { outline: 3px solid var(--color-vivid-pink); outline-offset: 3px; }
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Till-receipt edges: little scallops cut out of the top and bottom */
+.receipt-edge {
+  --r: 6px;
+  mask:
+    radial-gradient(circle at 50% 0, #0000 calc(var(--r) - .5px), #000 var(--r)) top / calc(2 * var(--r)) 51% repeat-x,
+    radial-gradient(circle at 50% 100%, #0000 calc(var(--r) - .5px), #000 var(--r)) bottom / calc(2 * var(--r)) 51% repeat-x;
+}
