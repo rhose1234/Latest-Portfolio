@@ -9,7 +9,7 @@ export default function Cta() {
       <div className={wrap}>
         <Reveal>
           <h2 className="text-[clamp(44px,8.5vw,120px)] font-extrabold leading-[.95] tracking-tighter text-white">
-            Got an upcoming <br /> campaign or project?
+            Got a project<br /> coming up?
           </h2>
           <ContactForm />
 
