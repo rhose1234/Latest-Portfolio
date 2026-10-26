@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll } from "framer-motion";
 import CodeLink from "@/components/ui/CodeLink";
 import Reveal from "@/components/ui/Reveal";
 import { UGC_BRANDS, type UgcBrand } from "@/lib/data";
@@ -17,27 +17,32 @@ const PAPER = "border border-crimson/15 shadow-[0_18px_40px_rgba(30,1,7,.12)] ou
 const FACE = "relative col-start-1 row-start-1 min-h-[180px] rounded-[22px] p-5 pt-10 [backface-visibility:hidden] lg:min-h-[210px]";
 
 export default function UgcBrands() {
+  const row = useRef<HTMLUListElement>(null);
+  const { scrollXProgress } = useScroll({ container: row });
+
   return (
     <section id="ugc" className="py-12 md:py-16">
       <div className={wrap}>
-        <Reveal>
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:text-[clamp(32px,5vw,72px)]">
-              Brands I&apos;ve told<br />stories for
-            </h2>
-            <Link
-              href="/rate-card"
-              className="group inline-flex shrink-0 items-center gap-1 pb-1 text-[15px] font-semibold underline decoration-2 underline-offset-4 transition hover:text-vivid-pink md:text-lg"
-            >
-              Rate card
-              <Arrow className="size-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-          <p className="mt-3 max-w-[52ch] text-[15px] leading-normal md:text-[17px]">Short-form videos made for real brands. Tap a card to watch them.</p>
+        {/* Phones: heading, blurb, then the rate card as a button. Tablet and up: the rate card link sits beside the heading. */}
+        <Reveal className="grid gap-y-3 md:grid-cols-[1fr_auto] md:items-end md:gap-x-4">
+          <h2 className="text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:col-start-1 md:row-start-1 md:text-[clamp(32px,5vw,72px)]">
+            Brands I&apos;ve told<br />stories for
+          </h2>
+          <p className="max-w-[52ch] text-[15px] leading-normal md:col-span-2 md:text-[17px]">Short-form videos made for real brands. Tap a card to watch them.</p>
+          <Link
+            href="/rate-card"
+            className="group mt-2 inline-flex items-center gap-2 justify-self-start rounded-full bg-crimson px-5 py-3 text-sm font-semibold text-light-red transition hover:bg-vivid-pink hover:text-white md:col-start-2 md:row-start-1 md:mt-0 md:gap-1 md:rounded-none md:bg-transparent md:p-0 md:pb-1 md:text-lg md:text-crimson md:underline md:decoration-2 md:underline-offset-4 md:hover:bg-transparent md:hover:text-vivid-pink"
+          >
+            UGC rate card
+            <Arrow className="size-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
         </Reveal>
 
         {/* Phones: one row that scrolls sideways, full-bleed past the page gutter. Tablet and up: a grid. */}
-        <ul className="scrollbar-hide -mx-7 mt-14 flex snap-x snap-mandatory scroll-px-7 gap-x-4 overflow-x-auto px-7 pb-10 md:mx-0 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-8 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4">
+        <ul
+          ref={row}
+          className="scrollbar-hide -mx-7 mt-10 flex snap-x snap-mandatory scroll-px-7 gap-x-4 overflow-x-auto px-7 pb-8 md:mx-0 md:mt-14 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-8 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-4"
+        >
           {UGC_BRANDS.map((brand, i) => {
             const tone = `${TONES[i % TONES.length]} ${PAPER}`;
             const page = `/ugc/${brand.slug}`;
@@ -88,6 +93,11 @@ export default function UgcBrands() {
             }
           />
         </ul>
+
+        {/* Phones only: shows how far along the row you've swiped */}
+        <div aria-hidden className="mx-auto h-1 w-24 overflow-hidden rounded-full bg-crimson/15 md:hidden">
+          <motion.div className="h-full origin-left rounded-full bg-crimson" style={{ scaleX: scrollXProgress }} />
+        </div>
       </div>
     </section>
   );
@@ -99,8 +109,10 @@ type TagProps = { index: number; front: ReactNode; back?: ReactNode };
 function Tag({ index, front, back }: TagProps) {
   const reduce = useReducedMotion();
   const [flipped, setFlipped] = useState(false);
+  const phone = useIsPhone();
   const drop = DROPS[index % DROPS.length];
-  const tilt = TILTS[index % TILTS.length];
+  // In the phone row the tags hang level-ish so they read as one neat line
+  const tilt = TILTS[index % TILTS.length] * (phone ? 0.35 : 1);
 
   const card = (
     <div className="relative w-full" style={{ perspective: 1000 }}>
@@ -143,7 +155,8 @@ function Tag({ index, front, back }: TagProps) {
         onHoverStart={() => setFlipped(true)}
         onHoverEnd={() => setFlipped(false)}
       >
-        <div aria-hidden className="relative w-2" style={{ height: drop }}>
+        {/* Same rope length for every tag on phones, staggered lengths from tablet up */}
+        <div aria-hidden className="relative h-8 w-2 md:h-[var(--drop)]" style={{ "--drop": `${drop}px` } as CSSProperties}>
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 shadow-sm" />
           <div className="absolute inset-y-0 left-0 w-px bg-pink-400 opacity-30" />
           <div className="absolute inset-y-0 right-0 w-px bg-pink-100 opacity-40" />
@@ -173,6 +186,19 @@ function BrandLogo({ brand }: { brand: UgcBrand }) {
     // eslint-disable-next-line @next/next/no-img-element
     <img ref={img} src={brand.logo} alt={`${brand.name} logo`} className="max-h-24 max-w-[80%] object-contain" onError={() => setMissing(true)} />
   );
+}
+
+/** Whether the screen is phone-sized (below Tailwind's md breakpoint). */
+function useIsPhone() {
+  const [phone, setPhone] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const sync = () => setPhone(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+  return phone;
 }
 
 /** Whether a #rrggbb background needs light text on it. */
