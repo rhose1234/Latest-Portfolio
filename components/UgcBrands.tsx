@@ -23,15 +23,15 @@ export default function UgcBrands() {
   return (
     <section id="ugc" className="py-12 md:py-16">
       <div className={wrap}>
-        {/* Phones: heading, blurb, then the rate card as a button. Tablet and up: the rate card link sits beside the heading. */}
-        <Reveal className="grid gap-y-3 md:grid-cols-[1fr_auto] md:items-end md:gap-x-4">
-          <h2 className="text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:col-start-1 md:row-start-1 md:text-[clamp(32px,5vw,72px)]">
+        {/* Phones: heading, then the blurb with the rate card link on the same line. Tablet and up: the link sits beside the heading. */}
+        <Reveal className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 md:items-end">
+          <h2 className="col-span-2 text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:col-span-1 md:col-start-1 md:row-start-1 md:text-[clamp(32px,5vw,72px)]">
             Brands I&apos;ve told<br />stories for
           </h2>
-          <p className="max-w-[52ch] text-[15px] leading-normal md:col-span-2 md:text-[17px]">Short-form videos made for real brands. Tap a card to watch them.</p>
+          <p className="max-w-[52ch] text-[15px] leading-normal md:col-span-2 md:text-[17px]">Tap a card to watch.</p>
           <Link
             href="/rate-card"
-            className="group mt-2 inline-flex items-center gap-2 justify-self-start rounded-full bg-crimson px-5 py-3 text-sm font-semibold text-light-red transition hover:bg-vivid-pink hover:text-white md:col-start-2 md:row-start-1 md:mt-0 md:gap-1 md:rounded-none md:bg-transparent md:p-0 md:pb-1 md:text-lg md:text-crimson md:underline md:decoration-2 md:underline-offset-4 md:hover:bg-transparent md:hover:text-vivid-pink"
+            className="group col-start-2 row-start-2 inline-flex items-center gap-1 justify-self-end whitespace-nowrap text-[15px] font-semibold underline decoration-2 underline-offset-4 transition hover:text-vivid-pink md:row-start-1 md:pb-1 md:text-lg"
           >
             UGC rate card
             <Arrow className="size-4 transition-transform group-hover:translate-x-0.5" />
