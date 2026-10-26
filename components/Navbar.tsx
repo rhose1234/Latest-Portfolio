@@ -40,9 +40,6 @@ export default function Navbar() {
             <a href="#about" className="hover:text-white">
               About
             </a>
-            <a href="#services" className="hover:text-white">
-              Services
-            </a>
             <a href="#work" className="hover:text-white">
               Projects
             </a>
@@ -50,7 +47,9 @@ export default function Navbar() {
               UGC
             </a>
             <a
-              href="#contact"
+              href={ME.calendly}
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-full bg-light-red px-5 py-2.5 font-semibold text-crimson transition hover:bg-vivid-pink hover:text-white whitespace-nowrap"
             >
               Book a Call
@@ -87,9 +86,6 @@ export default function Navbar() {
             <a href="#about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white">
               About
             </a>
-            <a href="#services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white">
-              Services
-            </a>
             <a href="#work" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white">
               Projects
             </a>
@@ -97,11 +93,13 @@ export default function Navbar() {
               UGC
             </a>
             <a
-              href="#contact"
+              href={ME.calendly}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setIsMobileMenuOpen(false)}
               className="rounded-full bg-light-red px-5 py-2.5 text-center font-semibold text-crimson transition hover:bg-vivid-pink hover:text-white"
             >
-              Contact me
+              Book a Call
             </a>
           </div>
         </div>

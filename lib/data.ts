@@ -10,6 +10,7 @@ export const ME = {
   facebook: "https://web.facebook.com/profile.php?id=100070538305621",
   tiktok: "https://www.tiktok.com/@marvelousrose02",
   email: "himarvelousrose@gmail.com",
+  calendly: "https://calendly.com/marvelousrhose",
 };
 
 export type Stat = { n: number; s: string; l: string };
