@@ -1,11 +1,10 @@
 "use client";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 
 /** A hand-drawn marker underline that draws itself, stroke by stroke, when scrolled into view. */
 export default function Scribble({ className = "" }: { className?: string }) {
-  const reduce = useReducedMotion();
   const stroke = (delay: number) => ({
-    initial: reduce ? false : { pathLength: 0 },
+    initial: { pathLength: 0 },
     whileInView: { pathLength: 1 },
     viewport: { once: true },
     transition: { duration: 0.6, ease: "easeOut", delay },

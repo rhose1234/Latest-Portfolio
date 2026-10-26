@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion, useScroll } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import CodeLink from "@/components/ui/CodeLink";
 import Reveal from "@/components/ui/Reveal";
 import { UGC_BRANDS, type UgcBrand } from "@/lib/data";
@@ -107,7 +107,6 @@ type TagProps = { index: number; front: ReactNode; back?: ReactNode };
 
 /** A tag hanging from the rail on the hero's lanyard. Hovering lifts it and, when it has a back, flips it over. */
 function Tag({ index, front, back }: TagProps) {
-  const reduce = useReducedMotion();
   const [flipped, setFlipped] = useState(false);
   const phone = useIsPhone();
   const drop = DROPS[index % DROPS.length];
@@ -135,7 +134,7 @@ function Tag({ index, front, back }: TagProps) {
   return (
     <motion.li
       className="relative w-[min(240px,66vw)] shrink-0 snap-start md:w-auto"
-      initial={reduce ? false : { y: -40, opacity: 0 }}
+      initial={{ y: -40, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       // Only the vertical margin, so a tag peeking in from the side of the mobile row still shows
       viewport={{ once: true, margin: "-60px 0px" }}
@@ -149,7 +148,7 @@ function Tag({ index, front, back }: TagProps) {
         className="flex flex-col items-center"
         style={{ transformOrigin: "50% 0" }}
         initial={{ rotate: tilt }}
-        animate={reduce ? { rotate: tilt } : { rotate: [tilt, tilt + 1.5, tilt] }}
+        animate={{ rotate: [tilt, tilt + 1.5, tilt] }}
         transition={{ duration: 4 + index, repeat: Infinity, ease: "easeInOut" }}
         whileHover={{ rotate: 0, y: -4, transition: { type: "spring", stiffness: 200, damping: 15 } }}
         onHoverStart={() => setFlipped(true)}

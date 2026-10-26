@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion";
+import { animate, motion, useMotionValue } from "framer-motion";
 import Photo from "@/components/ui/Photo";
 import { ME, ROLES } from "@/lib/data";
 import { btnPink, wrap } from "@/lib/styles";
@@ -33,7 +33,6 @@ const NUDGE = [
 
 /** Hero: the swinging, draggable ID card is the one memorable moment. */
 export default function Hero() {
-  const reduce = useReducedMotion();
 
   return (
     <section id="top" className="relative flex min-h-svh flex-col overflow-hidden bg-crimson-loading pb-16 pt-24 text-light-red">
@@ -55,7 +54,7 @@ export default function Hero() {
           ))}
         </div>
 
-        <IdCard reduce={!!reduce} />
+        <IdCard />
 
         <div className="hidden self-stretch justify-self-start pt-[50px] md:flex md:flex-col md:items-start md:justify-between">
           {PAIRS.map(([first, rest], i) => (
@@ -75,7 +74,7 @@ export default function Hero() {
         {/* Centred under the card on desktop, under the roles on mobile */}
         <motion.a
           href="#contact"
-          className={`${btnPink} -mt-8 md:col-start-2 md:mt-0`}
+          className={`${btnPink} -mt-4 md:col-start-2 md:mt-0`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: rowDelay(PAIRS.length), duration: 0.6 }}
@@ -90,7 +89,7 @@ export default function Hero() {
 /** The top of the rope, 220px above the card: the lanyard swings around this point. */
 const PIVOT = "50% -220px";
 
-function IdCard({ reduce }: { reduce: boolean }) {
+function IdCard() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [hasAutoFlipped, setHasAutoFlipped] = useState(false);
   const swing = useMotionValue(0);
@@ -130,7 +129,7 @@ function IdCard({ reduce }: { reduce: boolean }) {
       >
       <motion.div
         style={{ transformOrigin: PIVOT }}
-        animate={reduce ? undefined : { rotate: [0, -2, 2, -1.5, 1.5, -1, 1, 0] }}
+        animate={{ rotate: [0, -2, 2, -1.5, 1.5, -1, 1, 0] }}
         transition={{ rotate: { repeat: Infinity, duration: 4, ease: "easeInOut", repeatDelay: 1, delay: 1.5 } }}
       >
       {/* Pink Lanyard Rope */}

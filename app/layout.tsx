@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/next";
+import MotionProvider from "@/components/MotionProvider";
 import ScrollToTop from "@/components/ScrollToTop";
 import { ME } from "@/lib/data";
 import { OPEN_GRAPH, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from "@/lib/site";
@@ -27,7 +29,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="overflow-x-hidden font-sans antialiased">
         <ScrollToTop />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
+        {/* Vercel Web Analytics: page views only, no cookies. Switch it on under the project's Analytics tab on Vercel. */}
+        <Analytics />
       </body>
     </html>
   );
