@@ -1,39 +1,97 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import Reveal from "@/components/ui/Reveal";
-import { GOOGLE_REVIEWS, REVIEWS, type Review } from "@/lib/data";
+import { GOOGLE_REVIEWS, ME, REVIEWS, type Review } from "@/lib/data";
 import { wrap } from "@/lib/styles";
 
-/** Same paper colours as the brand tags, so each client gets their own avatar tone. */
-const TONES = ["bg-white", "bg-[#ffc8d4]", "bg-[#e6ddff]"];
+/** The brand tags' paper colours plus crimson, so each client gets their own avatar tone. */
+const TONES = ["bg-[#ffc8d4] text-crimson", "bg-[#e6ddff] text-crimson", "bg-crimson text-light-red"];
 
-/** Seconds a quote stays up before the next one: long enough to read it, never under 6s. */
-const holdFor = (review: Review) => Math.max(6, review.quote.split(/\s+/).length * 0.25);
+/** Words lifted straight from the reviews, floating around the phone on wide screens. Clicking one jumps to its review. */
+const PRAISE = [
+  { text: "Smooth, professional and on point", from: "Adaobi Iloduba", spot: "left-0 top-[6%] -rotate-6" },
+  { text: "Skilled and reliable", from: "Olatunbosun Adebola", spot: "left-[6%] top-[42%] rotate-3" },
+  { text: "So lovely to work with", from: "Amaka Mercy", spot: "bottom-[10%] left-0 -rotate-3" },
+  { text: "Highest standard and with precision", from: "Victor Opara", spot: "right-0 top-[16%] rotate-6" },
+  { text: "A 5* personal website", from: "Ayodeji Akiwowo", spot: "bottom-[22%] right-[4%] -rotate-6" },
+];
+
+/** Quick replies a visitor can tap once the reviews are in. I answer each with a way to get started. */
+const REPLIES = [
+  { ask: "I need a website", answer: "Love that! Tell me about your business and I'll get back to you.", cta: { label: "Send me a message", href: "#contact" } },
+  { ask: "I need UGC videos", answer: "Yes! Here are my packages and how booking works.", cta: { label: "See my UGC rate card", href: "/rate-card" } },
+  { ask: "Can we hop on a call?", answer: "Of course! Pick a time that works for you.", cta: { label: "Book a call", href: ME.calendly } },
+];
+
+type Reply = (typeof REPLIES)[number];
+type ChatLine = { from: "you"; text: string } | { from: "me"; reply: Reply };
+
+/** How long the "typing" dots show before each message lands, in ms. */
+const TYPING_MS = 1100;
 
 const rated = REVIEWS.filter((review) => review.rating);
 const average = rated.length ? (rated.reduce((sum, review) => sum + (review.rating ?? 0), 0) / rated.length).toFixed(1) : null;
 
+/** Every review as a client's message, then my line at the end. */
+const MESSAGES = REVIEWS.length + 1;
+
 export default function Reviews() {
   const reduce = useReducedMotion();
-  const card = useRef<HTMLDivElement>(null);
-  const inView = useInView(card, { margin: "-120px" });
-  const [active, setActive] = useState(0);
-  // Stops for good once a visitor picks a review themselves
-  const [auto, setAuto] = useState(true);
-  const [hovered, setHovered] = useState(false);
-  const playing = auto && inView && !hovered && !reduce && REVIEWS.length > 1;
+  const phone = useRef<HTMLDivElement>(null);
+  const thread = useRef<HTMLUListElement>(null);
+  const inView = useInView(phone, { once: true, margin: "-150px" });
+  // How many messages have arrived so far; they come in one at a time once the phone scrolls into view
+  const [shown, setShown] = useState(0);
+  const introDone = shown >= MESSAGES;
+  // What the visitor has asked through the quick replies, and my answers
+  const [chat, setChat] = useState<ChatLine[]>([]);
+  const [replying, setReplying] = useState(false);
+  const [loved, setLoved] = useState<string[]>([]);
+  const [flash, setFlash] = useState<string | null>(null);
+  const typing = (inView && !reduce && !introDone) || replying;
 
   useEffect(() => {
-    if (!playing) return;
-    const timer = setTimeout(() => setActive((i) => (i + 1) % REVIEWS.length), holdFor(REVIEWS[active]) * 1000);
+    if (!inView) return;
+    if (reduce) return setShown(MESSAGES);
+    if (introDone) return;
+    const timer = setTimeout(() => setShown((n) => n + 1), TYPING_MS);
     return () => clearTimeout(timer);
-  }, [active, playing]);
+  }, [inView, reduce, shown, introDone]);
 
-  const pick = (i: number) => {
-    setActive(i);
-    setAuto(false);
+  // Keep the newest message in view inside the phone, like a real chat
+  useEffect(() => {
+    thread.current?.scrollTo({ top: thread.current.scrollHeight, behavior: reduce ? "auto" : "smooth" });
+  }, [shown, chat.length, replying, reduce]);
+
+  // A clicked sticker scrolls its review into view and lights it up for a moment
+  useEffect(() => {
+    if (!flash || !thread.current) return;
+    const message = thread.current.querySelector<HTMLElement>(`[data-review="${flash}"]`);
+    if (message) thread.current.scrollTo({ top: message.offsetTop - 16, behavior: reduce ? "auto" : "smooth" });
+    const timer = setTimeout(() => setFlash(null), 1800);
+    return () => clearTimeout(timer);
+  }, [flash, reduce]);
+
+  const ask = (reply: Reply) => {
+    if (replying) return;
+    setChat((lines) => [...lines, { from: "you", text: reply.ask }]);
+    setReplying(true);
+    setTimeout(() => {
+      setChat((lines) => [...lines, { from: "me", reply }]);
+      setReplying(false);
+    }, reduce ? 0 : TYPING_MS);
   };
+
+  const spotlight = (name: string) => {
+    setShown(MESSAGES);
+    setFlash(name);
+  };
+
+  const toggleLove = (name: string) => setLoved((names) => (names.includes(name) ? names.filter((n) => n !== name) : [...names, name]));
+
+  const asked = chat.flatMap((line) => (line.from === "you" ? [line.text] : []));
+  const options = REPLIES.filter((reply) => !asked.includes(reply.ask));
 
   return (
     <section id="reviews" className="py-12 md:py-16">
@@ -49,7 +107,7 @@ export default function Reviews() {
             >
               {average ? (
                 <>
-                  <span aria-hidden className="text-vivid-pink">★</span>
+                  <span aria-hidden className="text-gold">★</span>
                   {average} on Google
                 </>
               ) : (
@@ -61,107 +119,256 @@ export default function Reviews() {
             </a>
           </div>
           <p className="mt-3 max-w-[52ch] text-[15px] leading-normal md:text-[17px]">
-            Don&apos;t just take my word for it. Here are honest
-            <br className="hidden md:inline" /> reviews from my previous clients.
+            Read honest reviews from previously served clients.
           </p>
         </Reveal>
 
-        <Reveal className="mt-10">
-          <div
-            ref={card}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            className="relative grid overflow-hidden rounded-[28px] bg-crimson text-light-red shadow-[0_18px_40px_rgba(30,1,7,.18)] md:grid-cols-[1.6fr_1fr]"
-          >
-            {/* Fills up while a quote is on screen, then the next one comes in */}
-            {playing && (
-              <motion.span
-                key={active}
-                aria-hidden
-                className="absolute inset-x-0 top-0 h-1 origin-left bg-vivid-pink"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: holdFor(REVIEWS[active]), ease: "linear" }}
-              />
-            )}
+        <div className="relative mt-12 lg:py-6">
+          {PRAISE.map((praise, i) => (
+            <span key={praise.text} className={`absolute z-10 hidden lg:block ${praise.spot}`}>
+              {/* Each sticker bobs on its own beat */}
+              <button
+                type="button"
+                onClick={() => spotlight(praise.from)}
+                aria-label={`Show ${praise.from}'s review`}
+                className="flex animate-float items-center gap-2 rounded-full border border-crimson/10 bg-white px-5 py-2.5 text-[15px] font-semibold shadow-[0_12px_30px_rgba(30,1,7,.1)] transition-[scale,box-shadow] hover:scale-105 hover:shadow-[0_16px_36px_rgba(234,4,93,.2)]"
+                style={{ animationDelay: `${i * -1.1}s` }}
+              >
+                <span className="text-gold">★</span>
+                &ldquo;{praise.text}&rdquo;
+              </button>
+            </span>
+          ))}
 
-            <div className="p-6 md:p-10 lg:p-12">
-              <span aria-hidden className="block h-14 text-[104px] font-extrabold leading-none text-vivid-pink md:h-20 md:text-[150px]">
-                &ldquo;
-              </span>
-              {/* Every quote sits in the same cell, so the card is always as tall as the longest one and never jumps */}
-              <div className="grid">
-                {REVIEWS.map((review, i) => (
-                  <Quote key={review.name + review.quote.slice(0, 20)} review={review} shown={i === active} />
-                ))}
+          <Reveal className="mx-auto w-full max-w-[400px]">
+            <div ref={phone} className="relative overflow-hidden rounded-[44px] border-[10px] border-crimson bg-white shadow-[0_30px_60px_rgba(30,1,7,.2)]">
+              {/* The phone's notch */}
+              <span aria-hidden className="absolute left-1/2 top-2 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-crimson" />
+
+              <div className="flex items-center gap-3 border-b border-crimson/10 px-5 pb-3.5 pt-9">
+                <span aria-hidden className="flex -space-x-2.5">
+                  {REVIEWS.slice(0, 3).map((review, i) => (
+                    <Avatar key={review.name} review={review} index={i} className="size-9 text-[11px] ring-2 ring-white" />
+                  ))}
+                </span>
+                <div className="min-w-0">
+                  <p className="font-bold leading-tight">Happy clients</p>
+                  <p className="truncate text-xs text-crimson/60">
+                    {REVIEWS.length} reviews
+                    {average && (
+                      <>
+                        {" "}· <span className="text-gold">★</span> {average} on Google
+                      </>
+                    )}
+                  </p>
+                </div>
+              </div>
+
+              {/* Messages that haven't arrived yet are still in the page, just hidden, so search engines can read every review */}
+              <ul
+                ref={thread}
+                aria-label="Client reviews"
+                aria-live="polite"
+                className="scrollbar-hide relative h-[440px] space-y-5 overflow-y-auto bg-[#fff6f5] bg-[radial-gradient(rgba(12,0,3,.06)_1px,transparent_1px)] px-4 py-5 [background-size:18px_18px] md:h-[480px]"
+              >
+                {REVIEWS.map((review, i) =>
+                  i < shown ? (
+                    <Arrive key={review.name} data-review={review.name}>
+                      <ClientMessage
+                        review={review}
+                        index={i}
+                        loved={loved.includes(review.name)}
+                        flashing={flash === review.name}
+                        onLove={() => toggleLove(review.name)}
+                      />
+                    </Arrive>
+                  ) : (
+                    <li key={review.name} hidden>
+                      <ClientMessage review={review} index={i} loved={false} flashing={false} onLove={() => {}} />
+                    </li>
+                  ),
+                )}
+                {shown > REVIEWS.length && (
+                  <Arrive>
+                    <MyMessage>Your project could be next.</MyMessage>
+                  </Arrive>
+                )}
+                {chat.map((line, i) =>
+                  line.from === "you" ? (
+                    <Arrive key={i} yours>
+                      <p className="rounded-[20px] rounded-br-md bg-crimson px-4 py-3 text-[15px] leading-relaxed text-light-red">{line.text}</p>
+                    </Arrive>
+                  ) : (
+                    <Arrive key={i}>
+                      <MyMessage>
+                        {line.reply.answer}
+                        <a
+                          href={line.reply.cta.href}
+                          {...(line.reply.cta.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                          className="group mt-3 flex items-center justify-between gap-2 rounded-xl bg-white px-3.5 py-2.5 text-sm font-semibold text-crimson transition hover:bg-light-red"
+                        >
+                          {line.reply.cta.label}
+                          <svg aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+                          </svg>
+                        </a>
+                      </MyMessage>
+                    </Arrive>
+                  ),
+                )}
+                {typing && <Typing mine={replying || shown === REVIEWS.length} />}
+              </ul>
+
+              {/* Quick replies show up once the reviews are all in */}
+              <div className="border-t border-crimson/10 bg-white">
+                <AnimatePresence initial={false}>
+                  {introDone && options.length > 0 && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="scrollbar-hide flex gap-2 overflow-x-auto px-3 pt-3">
+                        {options.map((reply) => (
+                          <button
+                            key={reply.ask}
+                            type="button"
+                            onClick={() => ask(reply)}
+                            disabled={replying}
+                            className="shrink-0 rounded-full border-2 border-vivid-pink px-3.5 py-1.5 text-sm font-semibold text-vivid-pink transition hover:bg-vivid-pink hover:text-white active:scale-95 disabled:opacity-50"
+                          >
+                            {reply.ask}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <a
+                  href="#contact"
+                  className="group m-3 flex items-center gap-3 rounded-full border border-crimson/15 bg-white py-2 pl-5 pr-2 text-sm text-crimson/50 transition hover:border-vivid-pink"
+                >
+                  <span className="flex-1">Start your project with me…</span>
+                  <span className="flex size-9 items-center justify-center rounded-full bg-vivid-pink text-white transition group-hover:scale-110">
+                    <svg aria-hidden className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </span>
+                </a>
               </div>
             </div>
-
-            <div className="border-t border-light-red/10 p-4 md:border-l md:border-t-0 md:p-6">
-              <ul className="scrollbar-hide flex gap-2.5 overflow-x-auto p-1 md:flex-col md:gap-1 md:overflow-visible md:p-0">
-                {REVIEWS.map((review, i) => (
-                  <li key={review.name + review.quote.slice(0, 20)} className="shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => pick(i)}
-                      aria-pressed={i === active}
-                      aria-label={`Review from ${review.name}`}
-                      className={`flex w-full items-center gap-3 rounded-2xl text-left transition md:px-3 md:py-2.5 ${
-                        i === active ? "md:bg-light-red/10" : "opacity-55 hover:opacity-100"
-                      }`}
-                    >
-                      <span
-                        className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-crimson ring-2 ring-offset-2 ring-offset-crimson transition md:size-11 ${
-                          TONES[i % TONES.length]
-                        } ${i === active ? "ring-vivid-pink" : "ring-transparent"}`}
-                      >
-                        {initials(review.name)}
-                      </span>
-                      <span className="hidden min-w-0 md:block">
-                        <span className="block truncate font-semibold text-white">{review.name}</span>
-                        <span className="block truncate text-sm text-light-red/60">{review.service}</span>
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
 }
 
-/** One client's review: the quote in big type, then who said it. Fades in when it's this quote's turn. */
-function Quote({ review, shown }: { review: Review; shown: boolean }) {
-  const paragraphs = review.quote.split("\n\n");
-  const about = [review.company, review.service, review.source && `via ${review.source}`].filter(Boolean).join(" · ");
-
+/** A message popping into the thread. The visitor's own messages sit on the right. */
+function Arrive({ children, yours = false, ...rest }: { children: ReactNode; yours?: boolean; "data-review"?: string }) {
   return (
-    <motion.figure
-      aria-hidden={!shown}
-      className={`col-start-1 row-start-1 flex flex-col ${shown ? "" : "pointer-events-none"}`}
-      initial={false}
-      animate={shown ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-      transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
+    <motion.li
+      {...rest}
+      className={yours ? "ml-auto w-fit max-w-[80%]" : ""}
+      initial={{ opacity: 0, y: 14, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ type: "spring", stiffness: 260, damping: 22 }}
+      style={{ transformOrigin: yours ? "100% 100%" : "0% 100%" }}
     >
-      <blockquote className="space-y-4 text-[clamp(19px,2.2vw,28px)] font-medium leading-snug tracking-tight text-white">
-        {paragraphs.map((text, i) => (
-          <p key={i}>{text}</p>
-        ))}
-      </blockquote>
-      <figcaption className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-8">
-        <span className="font-bold text-white">{review.name}</span>
-        {about && <span className="text-sm text-light-red/60">{about}</span>}
-        {review.rating && (
-          <span role="img" aria-label={`${review.rating} out of 5 stars`} className="tracking-widest text-vivid-pink">
-            {"★".repeat(review.rating)}
-            <span className="text-light-red/20">{"★".repeat(5 - review.rating)}</span>
-          </span>
-        )}
-      </figcaption>
-    </motion.figure>
+      {children}
+    </motion.li>
+  );
+}
+
+type ClientMessageProps = { review: Review; index: number; loved: boolean; flashing: boolean; onLove: () => void };
+
+/** One review as a chat message: avatar, the quote in a bubble with a heart to tap, then who said it. */
+function ClientMessage({ review, index, loved, flashing, onLove }: ClientMessageProps) {
+  const about = [review.company, review.service].filter(Boolean).join(" · ");
+  return (
+    <div className="flex items-end gap-2.5">
+      <Avatar review={review} index={index} className="mb-6 size-8 text-[11px]" />
+      <div className="min-w-0 max-w-[85%]">
+        <div className="relative">
+          <blockquote
+            className={`space-y-2 rounded-[20px] rounded-bl-md border bg-white px-4 py-3 text-[15px] leading-relaxed shadow-[0_4px_14px_rgba(30,1,7,.05)] transition duration-500 ${
+              flashing ? "border-vivid-pink ring-4 ring-vivid-pink/20" : "border-crimson/10"
+            }`}
+          >
+            {review.quote.split("\n\n").map((text, i) => (
+              <p key={i}>{text}</p>
+            ))}
+          </blockquote>
+          <button
+            type="button"
+            onClick={onLove}
+            aria-pressed={loved}
+            aria-label={loved ? `Unlike ${review.name}'s review` : `Love ${review.name}'s review`}
+            className={`absolute -bottom-3 -right-2 flex size-7 items-center justify-center rounded-full border shadow-sm transition active:scale-90 ${
+              loved ? "border-vivid-pink bg-vivid-pink text-white" : "border-crimson/10 bg-white text-crimson/40 hover:text-vivid-pink"
+            }`}
+          >
+            <motion.svg
+              key={String(loved)}
+              aria-hidden
+              className="size-3.5"
+              viewBox="0 0 24 24"
+              fill={loved ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth={2.2}
+              initial={{ scale: loved ? 0.4 : 1 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 12 }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </motion.svg>
+          </button>
+        </div>
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 px-1 text-xs text-crimson/60">
+          <span className="font-bold text-crimson">{review.name}</span>
+          {about && <span>· {about}</span>}
+          {review.rating && (
+            <span role="img" aria-label={`${review.rating} out of 5 stars`} className="tracking-wider text-gold">
+              {"★".repeat(review.rating)}
+            </span>
+          )}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** A message from me: my photo, then a pink bubble. */
+function MyMessage({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-end gap-2.5">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/images/hero.jpg" alt="" className="mb-6 size-8 shrink-0 rounded-full object-cover object-top" />
+      <div className="min-w-0 max-w-[85%]">
+        <div className="rounded-[20px] rounded-bl-md bg-vivid-pink px-4 py-3 text-[15px] font-medium leading-relaxed text-white">{children}</div>
+        <p className="mt-1.5 px-1 text-xs font-bold text-crimson">{ME.name}</p>
+      </div>
+    </div>
+  );
+}
+
+/** The three bouncing dots someone shows while typing. Mine are pink. */
+function Typing({ mine }: { mine: boolean }) {
+  return (
+    <li aria-hidden className={`ml-10 flex w-fit gap-1 rounded-[20px] rounded-bl-md px-4 py-3.5 ${mine ? "bg-vivid-pink" : "border border-crimson/10 bg-white"}`}>
+      {[0, 1, 2].map((dot) => (
+        <span key={dot} className={`size-2 animate-bounce rounded-full ${mine ? "bg-white/80" : "bg-crimson/40"}`} style={{ animationDelay: `${dot * 0.15}s` }} />
+      ))}
+    </li>
+  );
+}
+
+function Avatar({ review, index, className }: { review: Review; index: number; className: string }) {
+  return (
+    <span aria-hidden className={`flex shrink-0 items-center justify-center rounded-full font-extrabold ${TONES[index % TONES.length]} ${className}`}>
+      {initials(review.name)}
+    </span>
   );
 }
 
