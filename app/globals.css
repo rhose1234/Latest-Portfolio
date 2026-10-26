@@ -26,6 +26,12 @@
   50% { transform: translateY(-8px) rotate(4deg); }
 }
 
+/* The 404 page's ID card swaying on its lanyard */
+@keyframes sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float { animation: none; }
 }
