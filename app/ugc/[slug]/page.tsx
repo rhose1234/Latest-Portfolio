@@ -5,6 +5,7 @@ import Cta from "@/components/Cta";
 import Footer from "@/components/Footer";
 import CodeLink from "@/components/ui/CodeLink";
 import { ME, UGC_BRANDS } from "@/lib/data";
+import { OPEN_GRAPH } from "@/lib/site";
 import { wrap } from "@/lib/styles";
 
 type Props = { params: { slug: string } };
@@ -15,7 +16,18 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: Props): Metadata {
   const brand = UGC_BRANDS.find((b) => b.slug === params.slug);
-  return { title: brand ? `${brand.name} | UGC by ${ME.name}` : `UGC | ${ME.name}` };
+  if (!brand) return { title: "UGC" };
+  // The site name is added after the title by the layout's title template
+  const title = `${brand.name} UGC videos`;
+  const description = `Short-form UGC videos I made for ${brand.name}. ${brand.description}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/ugc/${brand.slug}` },
+    // Brand pages have no preview image of their own, so they use the home page's
+    openGraph: { ...OPEN_GRAPH, url: `/ugc/${brand.slug}`, title: `${title} | ${ME.name}`, description, images: "/opengraph-image" },
+    twitter: { card: "summary_large_image", title: `${title} | ${ME.name}`, description, images: "/opengraph-image" },
+  };
 }
 
 export default function UgcBrandPage({ params }: Props) {

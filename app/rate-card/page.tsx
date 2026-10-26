@@ -7,10 +7,17 @@ import Photo from "@/components/ui/Photo";
 import Reveal from "@/components/ui/Reveal";
 import TiltCard from "@/components/ui/TiltCard";
 import { ME, RATES, RATE_NOTES, UGC_BRANDS, type RatePackage } from "@/lib/data";
+import { OPEN_GRAPH, RATE_CARD_DESCRIPTION } from "@/lib/site";
 import { SOCIALS } from "@/lib/socials";
 import { btnPink, wrap } from "@/lib/styles";
 
-export const metadata: Metadata = { title: `UGC rate card | ${ME.name}` };
+export const metadata: Metadata = {
+  title: "UGC rate card",
+  description: RATE_CARD_DESCRIPTION,
+  alternates: { canonical: "/rate-card" },
+  openGraph: { ...OPEN_GRAPH, url: "/rate-card", title: `UGC rate card | ${ME.name}`, description: RATE_CARD_DESCRIPTION },
+  twitter: { card: "summary_large_image", title: `UGC rate card | ${ME.name}`, description: RATE_CARD_DESCRIPTION },
+};
 
 /** Package cards get richer as the packages grow: white, pink, then dark. */
 const TONES = [
