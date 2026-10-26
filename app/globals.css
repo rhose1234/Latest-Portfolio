@@ -33,6 +33,8 @@
 @layer base {
   html { scroll-behavior: smooth; }
   body { background: var(--color-light-red); color: var(--color-crimson); }
+  /* Outfit's regular weight reads heavy in running text, so paragraphs use Light. Anything given a weight class keeps it. */
+  p, li, blockquote, dd { font-weight: 300; }
   :focus-visible { outline: 3px solid var(--color-vivid-pink); outline-offset: 3px; }
 }
 
