@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import ScrollToTop from "@/components/ScrollToTop";
 import { ME } from "@/lib/data";
 import { OPEN_GRAPH, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -24,7 +25,10 @@ export const viewport: Viewport = { themeColor: "#0c0003" };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="overflow-x-hidden font-sans antialiased">{children}</body>
+      <body className="overflow-x-hidden font-sans antialiased">
+        <ScrollToTop />
+        {children}
+      </body>
     </html>
   );
 }
