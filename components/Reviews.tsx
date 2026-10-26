@@ -1,60 +1,64 @@
 "use client";
-import { useRef, type ReactNode } from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import Reveal from "@/components/ui/Reveal";
 import { GOOGLE_REVIEWS, REVIEWS, type Review } from "@/lib/data";
-import { btn, wrap } from "@/lib/styles";
+import { wrap } from "@/lib/styles";
 
-/** Each receipt settles at its own slight angle once it has printed. */
-const TILTS = [-2, 1.5, -1, 2.5];
-const PRINT_SECONDS = 1.6;
+/** Same paper colours as the brand tags, so each client gets their own avatar tone. */
+const TONES = ["bg-white", "bg-[#ffc8d4]", "bg-[#e6ddff]"];
 
-/** Rubber-stamp ink: green for happy clients, pink for the spot that's still open. */
-const STAMP_INK = {
-  Satisfied: "border-emerald-600 text-emerald-600",
-  Reserved: "border-vivid-pink text-vivid-pink",
-};
+/** Seconds a quote stays up before the next one: long enough to read it, never under 6s. */
+const holdFor = (review: Review) => Math.max(6, review.quote.split(/\s+/).length * 0.25);
 
-/** Receipts slide down out of the printer slot one after another, then drop into their tilt. */
-const printed: Variants = {
-  waiting: { y: "-100%", rotate: 0 },
-  printed: (i: number) => ({
-    y: 0,
-    rotate: TILTS[i % TILTS.length],
-    transition: {
-      y: { duration: PRINT_SECONDS, ease: "linear", delay: i * 0.6 },
-      rotate: { type: "spring", stiffness: 120, damping: 10, delay: i * 0.6 + PRINT_SECONDS },
-    },
-  }),
-};
+const rated = REVIEWS.filter((review) => review.rating);
+const average = rated.length ? (rated.reduce((sum, review) => sum + (review.rating ?? 0), 0) / rated.length).toFixed(1) : null;
 
 export default function Reviews() {
   const reduce = useReducedMotion();
-  const row = useRef<HTMLDivElement>(null);
-  // One receipt (300px) plus the gap between receipts
-  const slide = (direction: 1 | -1) => row.current?.scrollBy({ left: direction * 332, behavior: "smooth" });
+  const card = useRef<HTMLDivElement>(null);
+  const inView = useInView(card, { margin: "-120px" });
+  const [active, setActive] = useState(0);
+  // Stops for good once a visitor picks a review themselves
+  const [auto, setAuto] = useState(true);
+  const [hovered, setHovered] = useState(false);
+  const playing = auto && inView && !hovered && !reduce && REVIEWS.length > 1;
+
+  useEffect(() => {
+    if (!playing) return;
+    const timer = setTimeout(() => setActive((i) => (i + 1) % REVIEWS.length), holdFor(REVIEWS[active]) * 1000);
+    return () => clearTimeout(timer);
+  }, [active, playing]);
+
+  const pick = (i: number) => {
+    setActive(i);
+    setAuto(false);
+  };
 
   return (
     <section id="reviews" className="py-12 md:py-16">
       <div className={wrap}>
         <Reveal>
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:text-[clamp(32px,5vw,72px)]">The receipts</h2>
-            <div className="flex shrink-0 gap-2">
-              {([-1, 1] as const).map((direction) => (
-                <button
-                  key={direction}
-                  type="button"
-                  onClick={() => slide(direction)}
-                  aria-label={direction < 0 ? "Previous receipts" : "More receipts"}
-                  className="flex size-11 items-center justify-center rounded-full border-2 border-crimson transition hover:bg-crimson hover:text-light-red"
-                >
-                  <svg aria-hidden className={`size-5 ${direction < 0 ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </button>
-              ))}
-            </div>
+            <h2 className="text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:text-[clamp(32px,5vw,72px)]">Feedbacks</h2>
+            <a
+              href={GOOGLE_REVIEWS}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex shrink-0 items-center gap-1 pb-1 text-[15px] font-semibold underline decoration-2 underline-offset-4 transition hover:text-vivid-pink md:text-lg"
+            >
+              {average ? (
+                <>
+                  <span aria-hidden className="text-vivid-pink">★</span>
+                  {average} on Google
+                </>
+              ) : (
+                "More on Google"
+              )}
+              <svg aria-hidden className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M9 7h8v8" />
+              </svg>
+            </a>
           </div>
           <p className="mt-3 max-w-[52ch] text-[15px] leading-normal md:text-[17px]">
             Don&apos;t just take my word for it. Here are honest
@@ -62,136 +66,110 @@ export default function Reviews() {
           </p>
         </Reveal>
 
-        {/* The printer slot the receipts come out of */}
-        <div aria-hidden className="relative z-10 mt-12 h-5 rounded-full bg-crimson shadow-[0_8px_20px_rgba(30,1,7,.25)]">
-          <div className="absolute inset-x-6 top-1/2 h-1 -translate-y-1/2 rounded-full bg-black shadow-[0_0_12px_rgba(234,4,93,.8)]" />
-        </div>
-      </div>
+        <Reveal className="mt-10">
+          <div
+            ref={card}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            className="relative grid overflow-hidden rounded-[28px] bg-crimson text-light-red shadow-[0_18px_40px_rgba(30,1,7,.18)] md:grid-cols-[1.6fr_1fr]"
+          >
+            {/* Fills up while a quote is on screen, then the next one comes in */}
+            {playing && (
+              <motion.span
+                key={active}
+                aria-hidden
+                className="absolute inset-x-0 top-0 h-1 origin-left bg-vivid-pink"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: holdFor(REVIEWS[active]), ease: "linear" }}
+              />
+            )}
 
-      {/* Scrolls sideways once there are more receipts than fit; its top edge hides receipts until they print */}
-      <div ref={row} className="scrollbar-hide -mt-2.5 snap-x snap-mandatory overflow-x-auto">
-        {/* Side padding lines the first receipt up with the heading on wide screens */}
-        <motion.ul
-          className="mx-auto flex w-max gap-8 px-[max(28px,calc((100vw-1200px)/2+28px))] pb-12"
-          initial={reduce ? false : "waiting"}
-          whileInView="printed"
-          animate={reduce ? "printed" : undefined}
-          viewport={{ once: true, margin: "-120px" }}
-        >
-          {REVIEWS.map((review, i) => (
-            <Receipt key={review.name + review.quote.slice(0, 20)} index={i} stamp="Satisfied">
-              <ReviewBody review={review} />
-            </Receipt>
-          ))}
-          <Receipt index={REVIEWS.length} stamp="Reserved">
-            <Rows rows={[["Client", "You?"], ["Service", "Website · UGC"]]} />
-            <Dashes />
-            <p className="font-sans text-[15px] leading-relaxed">This receipt is waiting for your story.</p>
-            <a
-              href="#contact"
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-crimson px-4 py-2 font-sans text-sm font-semibold text-light-red transition hover:bg-vivid-pink hover:text-white"
-            >
-              Let&apos;s work
-              <svg aria-hidden className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-          </Receipt>
-        </motion.ul>
-      </div>
+            <div className="p-6 md:p-10 lg:p-12">
+              <span aria-hidden className="block h-14 text-[104px] font-extrabold leading-none text-vivid-pink md:h-20 md:text-[150px]">
+                &ldquo;
+              </span>
+              {/* Every quote sits in the same cell, so the card is always as tall as the longest one and never jumps */}
+              <div className="grid">
+                {REVIEWS.map((review, i) => (
+                  <Quote key={review.name + review.quote.slice(0, 20)} review={review} shown={i === active} />
+                ))}
+              </div>
+            </div>
 
-      <div className={`${wrap} text-center`}>
-        <a href={GOOGLE_REVIEWS} target="_blank" rel="noopener noreferrer" className={`${btn} group`}>
-          <span className="flex items-center gap-2">
-            Read more reviews on Google
-            <svg aria-hidden className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M9 7h8v8" />
-            </svg>
-          </span>
-        </a>
+            <div className="border-t border-light-red/10 p-4 md:border-l md:border-t-0 md:p-6">
+              <ul className="scrollbar-hide flex gap-2.5 overflow-x-auto p-1 md:flex-col md:gap-1 md:overflow-visible md:p-0">
+                {REVIEWS.map((review, i) => (
+                  <li key={review.name + review.quote.slice(0, 20)} className="shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => pick(i)}
+                      aria-pressed={i === active}
+                      aria-label={`Review from ${review.name}`}
+                      className={`flex w-full items-center gap-3 rounded-2xl text-left transition md:px-3 md:py-2.5 ${
+                        i === active ? "md:bg-light-red/10" : "opacity-55 hover:opacity-100"
+                      }`}
+                    >
+                      <span
+                        className={`flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-extrabold text-crimson ring-2 ring-offset-2 ring-offset-crimson transition md:size-11 ${
+                          TONES[i % TONES.length]
+                        } ${i === active ? "ring-vivid-pink" : "ring-transparent"}`}
+                      >
+                        {initials(review.name)}
+                      </span>
+                      <span className="hidden min-w-0 md:block">
+                        <span className="block truncate font-semibold text-white">{review.name}</span>
+                        <span className="block truncate text-sm text-light-red/60">{review.service}</span>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-/** A till receipt: the given body, then a barcode with a rubber stamp beside it. */
-function Receipt({ index, stamp, children }: { index: number; stamp: keyof typeof STAMP_INK; children: ReactNode }) {
-  return (
-    <motion.li
-      custom={index}
-      variants={printed}
-      whileHover={{ rotate: 0, y: -6, transition: { type: "spring", stiffness: 200, damping: 15 } }}
-      className="shrink-0 snap-center drop-shadow-[0_18px_22px_rgba(30,1,7,.16)]"
-      style={{ transformOrigin: "50% 0" }}
-    >
-      <article className="receipt-edge w-[min(300px,78vw)] bg-[#fffdf7] px-6 pb-9 pt-8 font-mono text-[13px] text-crimson">
-        {children}
-        <Dashes />
-        <div className="flex items-center justify-between gap-3">
-          <div aria-hidden className="flex h-10 w-[45%] items-stretch justify-between">
-            {Array.from({ length: 18 }).map((_, i) => (
-              <i key={i} className={`bg-crimson ${i % 5 === 0 ? "w-[3px]" : i % 3 === 0 ? "w-0.5" : "w-px"}`} />
-            ))}
-          </div>
-          <span className={`-rotate-12 rounded-md border-[3px] px-2 py-0.5 text-sm font-bold uppercase tracking-widest opacity-80 ${STAMP_INK[stamp]}`}>
-            {stamp}
-          </span>
-        </div>
-      </article>
-    </motion.li>
-  );
-}
-
-function ReviewBody({ review }: { review: Review }) {
-  const rows: [string, string][] = [["Client", review.name]];
-  if (review.company) rows.push(["Company", review.company]);
-  rows.push(["Service", review.service]);
-  if (review.date) rows.push(["Date", review.date]);
-
-  const footer: [string, string][] = [];
-  if (review.rating) footer.push(["Rating", `${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}`]);
-  if (review.source) footer.push(["Via", review.source]);
-
+/** One client's review: the quote in big type, then who said it. Fades in when it's this quote's turn. */
+function Quote({ review, shown }: { review: Review; shown: boolean }) {
   const paragraphs = review.quote.split("\n\n");
+  const about = [review.company, review.service, review.source && `via ${review.source}`].filter(Boolean).join(" · ");
 
   return (
-    <>
-      <Rows rows={rows} />
-      <Dashes />
-      <blockquote className="space-y-3 font-sans text-[15px] leading-relaxed">
+    <motion.figure
+      aria-hidden={!shown}
+      className={`col-start-1 row-start-1 flex flex-col ${shown ? "" : "pointer-events-none"}`}
+      initial={false}
+      animate={shown ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+      transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
+    >
+      <blockquote className="space-y-4 text-[clamp(19px,2.2vw,28px)] font-medium leading-snug tracking-tight text-white">
         {paragraphs.map((text, i) => (
-          <p key={i}>
-            {i === 0 && "“"}
-            {text}
-            {i === paragraphs.length - 1 && "”"}
-          </p>
+          <p key={i}>{text}</p>
         ))}
       </blockquote>
-      {footer.length > 0 && (
-        <>
-          <Dashes />
-          <Rows rows={footer} />
-        </>
-      )}
-    </>
+      <figcaption className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-8">
+        <span className="font-bold text-white">{review.name}</span>
+        {about && <span className="text-sm text-light-red/60">{about}</span>}
+        {review.rating && (
+          <span role="img" aria-label={`${review.rating} out of 5 stars`} className="tracking-widest text-vivid-pink">
+            {"★".repeat(review.rating)}
+            <span className="text-light-red/20">{"★".repeat(5 - review.rating)}</span>
+          </span>
+        )}
+      </figcaption>
+    </motion.figure>
   );
 }
 
-/** Label .......... value lines, like items on a till receipt. */
-function Rows({ rows }: { rows: [string, string][] }) {
-  return (
-    <dl className="space-y-1">
-      {rows.map(([label, value]) => (
-        <div key={label} className="flex items-baseline">
-          <dt className="uppercase opacity-60">{label}</dt>
-          <span aria-hidden className="mx-2 flex-1 border-b border-dotted border-crimson/40" />
-          <dd className="text-right font-bold">{value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-function Dashes() {
-  return <hr className="my-4 border-0 border-t-2 border-dashed border-crimson/30" />;
+/** "Adaobi Iloduba" -> "AI" */
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
 }
