@@ -42,7 +42,7 @@ export const WORK: Project[] = [
   { title: "MESKTOMO Logistics", description: "Logistics, warehousing and supply chain solutions across Nigeria and international markets.", link: "https://mesktomolog.com/", image: "/images/project 5.png", category: "websites" },
 ];
 
-/* Client reviews, printed as receipts. Only real reviews from real clients, in their own words.
+/* Client reviews, shown one at a time in the "Feedbacks" section. Only real reviews from real clients, in their own words.
    Separate paragraphs in a quote with a blank line (\n\n). Add one like:
    { name: "Client name", company: "Their company", service: "Website", quote: "…", rating: 5, source: "Google" } */
 export const GOOGLE_REVIEWS = "https://share.google/m1TjFz4xjgbHpVgRb";
@@ -88,9 +88,20 @@ export const REVIEWS: Review[] = [
 /* Your UGC rate card, shown at /rate-card. While RATES is empty the page says rates are on request.
    Add a package like: { name: "Starter", price: "₦50,000", description: "One video to test the waters", includes: ["1 UGC video (up to 60s)", "1 revision"], featured: false } */
 export type RatePackage = { name: string; price: string; description?: string; includes: string[]; featured?: boolean };
-export const RATES: RatePackage[] = [];
-/* Small print under the packages, e.g. "Usage rights: 30 days organic", "Turnaround: 5–7 working days" */
-export const RATE_NOTES: string[] = [];
+export const RATES: RatePackage[] = [
+  { name: "Basic", price: "₦100,000", includes: ["1 video (15–60 sec)", "1 story upload"] },
+  { name: "Standard", price: "₦200,000", includes: ["2 videos (15–60 sec)", "2 story uploads"] },
+  { name: "Premium", price: "₦400,000", includes: ["3 videos (60–90 sec)", "2 photo posts", "3 story uploads"] },
+];
+/* Terms shown under the packages, added like: { title: "Turnaround", text: "5–7 working days from the brief." } */
+export type RateNote = { title: string; text: string };
+export const RATE_NOTES: RateNote[] = [
+  { title: "Payment before production", text: "After our clarity call, full payment or a deposit is made before I start creating your videos." },
+  { title: "Organic use only", text: "Videos in these packages are for organic posting and can't be used to run ads." },
+  { title: "Ads are charged separately", text: "Want to run a video as an ad? Ad usage is a separate cost, based on how long you'll run it for." },
+  { title: "Posted on all my socials", text: "When I post on my page, it goes out on X, Instagram, Facebook and TikTok." },
+  { title: "Your brand gets credit", text: "Every post tags your brand, or adds you as a collaborator where the platform allows it." },
+];
 
 /* UGC brands. The description shows on the hanging card and the brand's page; the logo (public/images/ugc/) on the card's back, over logoBg; code is an optional sign-up code, codeLink its referral link.
    Videos and their covers go in public/videos/<slug>/, added like:

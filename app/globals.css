@@ -12,11 +12,21 @@
   --font-mono: "Space Mono", ui-monospace, monospace;
 
   --animate-marquee: marquee 30s linear infinite;
+  --animate-float: float 5s ease-in-out infinite;
 }
 
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-8px) rotate(4deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float { animation: none; }
 }
 
 @layer base {
@@ -32,12 +42,4 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-}
-
-/* Till-receipt edges: little scallops cut out of the top and bottom */
-.receipt-edge {
-  --r: 6px;
-  mask:
-    radial-gradient(circle at 50% 0, #0000 calc(var(--r) - .5px), #000 var(--r)) top / calc(2 * var(--r)) 51% repeat-x,
-    radial-gradient(circle at 50% 100%, #0000 calc(var(--r) - .5px), #000 var(--r)) bottom / calc(2 * var(--r)) 51% repeat-x;
 }
