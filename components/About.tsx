@@ -15,10 +15,10 @@ export default function About() {
         </Reveal>
 
         <Reveal>
-          <h2 className="relative inline-block text-[clamp(28px,4vw,56px)] font-extrabold leading-[.95] tracking-tighter whitespace-nowrap">
-            Get to know{" "}
+          <h2 className="relative inline-block text-[clamp(28px,4vw,56px)] font-extrabold leading-[.95] tracking-tighter">
+            Behind the{" "}
             <span className="relative inline-block text-vivid-pink">
-              me
+              screen
               <Scribble className="absolute -bottom-3 left-0 h-3 w-full md:-bottom-4 md:h-4" />
             </span>
             {/* A name sticker slapped on the corner of the heading */}
