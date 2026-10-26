@@ -97,7 +97,7 @@ export default function Reviews() {
       <div className={wrap}>
         <Reveal>
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:text-[clamp(32px,5vw,72px)]">Feedbacks</h2>
+            <h2 className="text-[clamp(26px,7vw,40px)] font-extrabold leading-[.95] tracking-tighter md:text-[clamp(32px,5vw,72px)]">Reviews</h2>
             <a
               href={GOOGLE_REVIEWS}
               target="_blank"

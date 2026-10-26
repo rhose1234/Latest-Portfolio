@@ -44,7 +44,7 @@ export const WORK: Project[] = [
   { title: "MESKTOMO Logistics", description: "Logistics, warehousing and supply chain solutions across Nigeria and international markets.", link: "https://mesktomolog.com/", image: "/images/project 5.png", category: "websites" },
 ];
 
-/* Client reviews, shown one at a time in the "Feedbacks" section. Only real reviews from real clients, in their own words.
+/* Client reviews, shown as chat messages in the "Reviews" section. Only real reviews from real clients, in their own words.
    Separate paragraphs in a quote with a blank line (\n\n). Add one like:
    { name: "Client name", company: "Their company", service: "Website", quote: "…", rating: 5, source: "Google" } */
 export const GOOGLE_REVIEWS = "https://share.google/m1TjFz4xjgbHpVgRb";
