@@ -1,5 +1,5 @@
 "use client";
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { btnPink } from "@/lib/styles";
 
 /** Web3Forms access key, from .env.local. It's a public key, made to be used in the browser. */
@@ -12,6 +12,7 @@ type Status = { kind: "idle" | "sending" } | { kind: "success" | "error"; text: 
 
 const EMPTY: Values = { name: "", email: "", message: "" };
 const MAX: Record<Field, number> = { name: 80, email: 254, message: 3000 };
+const SUCCESS_SECONDS = 5;
 
 /** Strips markup, invisible control characters and stray whitespace, then caps the length. */
 function sanitize(field: Field, value: string) {
@@ -40,6 +41,13 @@ export default function ContactForm() {
   const [values, setValues] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+
+  // The success message clears itself after a few seconds; errors stay until the visitor acts on them
+  useEffect(() => {
+    if (status.kind !== "success") return;
+    const timer = setTimeout(() => setStatus({ kind: "idle" }), SUCCESS_SECONDS * 1000);
+    return () => clearTimeout(timer);
+  }, [status]);
 
   const update = (field: Field) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setValues((current) => ({ ...current, [field]: event.target.value }));
