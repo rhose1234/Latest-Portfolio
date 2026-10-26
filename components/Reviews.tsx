@@ -8,13 +8,13 @@ import { wrap } from "@/lib/styles";
 /** The brand tags' paper colours plus crimson, so each client gets their own avatar tone. */
 const TONES = ["bg-[#ffc8d4] text-crimson", "bg-[#e6ddff] text-crimson", "bg-crimson text-light-red"];
 
-/** Words lifted straight from the reviews, floating around the phone on wide screens. Clicking one jumps to its review. */
+/** Words lifted straight from the reviews, floating around the phone on wide screens. Tilt is in degrees and matches the spot's rotate class. */
 const PRAISE = [
-  { text: "Smooth, professional and on point", from: "Adaobi Iloduba", spot: "left-0 top-[6%] -rotate-6" },
-  { text: "Skilled and reliable", from: "Olatunbosun Adebola", spot: "left-[6%] top-[42%] rotate-3" },
-  { text: "So lovely to work with", from: "Amaka Mercy", spot: "bottom-[10%] left-0 -rotate-3" },
-  { text: "Highest standard and with precision", from: "Victor Opara", spot: "right-0 top-[16%] rotate-6" },
-  { text: "A 5* personal website", from: "Ayodeji Akiwowo", spot: "bottom-[22%] right-[4%] -rotate-6" },
+  { text: "Smooth, professional and on point", from: "Adaobi Iloduba", spot: "left-0 top-[6%] -rotate-6", tilt: -6 },
+  { text: "Skilled and reliable", from: "Olatunbosun Adebola", spot: "left-[6%] top-[42%] rotate-3", tilt: 3 },
+  { text: "So lovely to work with", from: "Amaka Mercy", spot: "bottom-[10%] left-0 -rotate-3", tilt: -3 },
+  { text: "Highest standard and with precision", from: "Victor Opara", spot: "right-0 top-[16%] rotate-6", tilt: 6 },
+  { text: "A 5* personal website", from: "Ayodeji Akiwowo", spot: "bottom-[22%] right-[4%] -rotate-6", tilt: -6 },
 ];
 
 /** Quick replies a visitor can tap once the reviews are in. I answer each with a way to get started. */
@@ -49,11 +49,10 @@ export default function Reviews() {
   const [replying, setReplying] = useState(false);
   const [loved, setLoved] = useState<string[]>([]);
   const [flash, setFlash] = useState<string | null>(null);
-  const typing = (inView && !reduce && !introDone) || replying;
+  const typing = (inView && !introDone) || replying;
 
   useEffect(() => {
     if (!inView) return;
-    if (reduce) return setShown(MESSAGES);
     if (introDone) return;
     const timer = setTimeout(() => setShown((n) => n + 1), TYPING_MS);
     return () => clearTimeout(timer);
@@ -80,7 +79,7 @@ export default function Reviews() {
     setTimeout(() => {
       setChat((lines) => [...lines, { from: "me", reply }]);
       setReplying(false);
-    }, reduce ? 0 : TYPING_MS);
+    }, TYPING_MS);
   };
 
   const spotlight = (name: string) => {
@@ -124,21 +123,40 @@ export default function Reviews() {
         </Reveal>
 
         <div className="relative mt-12 lg:py-6">
-          {PRAISE.map((praise, i) => (
-            <span key={praise.text} className={`absolute z-10 hidden lg:block ${praise.spot}`}>
-              {/* Each sticker bobs on its own beat */}
-              <button
-                type="button"
-                onClick={() => spotlight(praise.from)}
-                aria-label={`Show ${praise.from}'s review`}
-                className="flex animate-float items-center gap-2 rounded-full border border-crimson/10 bg-white px-5 py-2.5 text-[15px] font-semibold shadow-[0_12px_30px_rgba(30,1,7,.1)] transition-[scale,box-shadow] hover:scale-105 hover:shadow-[0_16px_36px_rgba(234,4,93,.2)]"
-                style={{ animationDelay: `${i * -1.1}s` }}
-              >
-                <span className="text-gold">★</span>
-                &ldquo;{praise.text}&rdquo;
-              </button>
-            </span>
-          ))}
+          {PRAISE.map((praise, i) => {
+            const order = REVIEWS.findIndex((review) => review.name === praise.from);
+            const arrived = order < shown;
+            // Lit while its review is the newest message, or after it's been tapped
+            const lit = flash === praise.from || (!introDone && order === shown - 1);
+            return (
+              <span key={praise.text} className={`absolute z-10 hidden lg:block ${praise.spot}`}>
+                {/* Bobs on its own beat */}
+                <span className="block animate-float" style={{ animationDelay: `${i * -1.1}s` }}>
+                  {/* Pops in when its review arrives in the chat. Drag it around and it springs back; tap it to jump to the review. */}
+                  <motion.button
+                    type="button"
+                    onTap={() => spotlight(praise.from)}
+                    aria-label={`Show ${praise.from}'s review`}
+                    initial={false}
+                    animate={arrived ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.4 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 18 }}
+                    whileHover={{ scale: 1.08, rotate: praise.tilt * -1 }}
+                    whileTap={{ scale: 0.95 }}
+                    drag
+                    dragSnapToOrigin
+                    dragElastic={0.5}
+                    whileDrag={{ scale: 1.12, cursor: "grabbing" }}
+                    className={`flex cursor-grab touch-none select-none items-center gap-2 rounded-full border-2 bg-white px-5 py-2.5 text-[15px] font-semibold shadow-[0_12px_30px_rgba(30,1,7,.1)] transition-[border-color,box-shadow] duration-300 ${
+                      lit ? "border-vivid-pink shadow-[0_16px_36px_rgba(234,4,93,.25)]" : "border-transparent"
+                    } ${arrived ? "" : "pointer-events-none"}`}
+                  >
+                    <span className="text-gold">★</span>
+                    &ldquo;{praise.text}&rdquo;
+                  </motion.button>
+                </span>
+              </span>
+            );
+          })}
 
           <Reveal className="mx-auto w-full max-w-[400px]">
             <div ref={phone} className="relative overflow-hidden rounded-[44px] border-[10px] border-crimson bg-white shadow-[0_30px_60px_rgba(30,1,7,.2)]">
@@ -265,13 +283,14 @@ export default function Reviews() {
   );
 }
 
-/** A message popping into the thread. The visitor's own messages sit on the right. */
+/** A message popping into the thread, or fading in with reduced motion. The visitor's own messages sit on the right. */
 function Arrive({ children, yours = false, ...rest }: { children: ReactNode; yours?: boolean; "data-review"?: string }) {
+  const reduce = useReducedMotion();
   return (
     <motion.li
       {...rest}
       className={yours ? "ml-auto w-fit max-w-[80%]" : ""}
-      initial={{ opacity: 0, y: 14, scale: 0.96 }}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 14, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 22 }}
       style={{ transformOrigin: yours ? "100% 100%" : "0% 100%" }}
