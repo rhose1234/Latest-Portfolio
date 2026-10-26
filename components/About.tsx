@@ -21,10 +21,6 @@ export default function About() {
               screen
               <Scribble className="absolute -bottom-3 left-0 h-3 w-full md:-bottom-4 md:h-4" />
             </span>
-            {/* A name sticker slapped on the corner of the heading */}
-            <span className="absolute -right-6 -top-7 rotate-6 rounded-full bg-crimson px-3 py-1 text-xs font-semibold tracking-normal text-light-red shadow-[0_6px_14px_rgba(30,1,7,.2)] transition-transform hover:rotate-0 md:-right-10 md:-top-8 md:text-sm">
-              Hi, I&apos;m {ME.name.split(" ")[0]}
-            </span>
           </h2>
           <div className="mt-8 max-w-[52ch] space-y-4 text-[15px] leading-relaxed md:text-base">
             <p>
