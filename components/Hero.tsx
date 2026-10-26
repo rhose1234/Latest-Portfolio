@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion";
 import Photo from "@/components/ui/Photo";
 import { ME, ROLES } from "@/lib/data";
-import { btnPinkSm, wrap } from "@/lib/styles";
+import { btnPink, wrap } from "@/lib/styles";
 
 const word = "font-extrabold uppercase leading-[1.05] tracking-tighter";
 const slide = (x: number, delay: number) => ({
@@ -39,6 +39,14 @@ export default function Hero() {
     <section id="top" className="relative flex min-h-svh flex-col overflow-hidden bg-crimson-loading pb-16 pt-24 text-light-red">
       <div aria-hidden className="pointer-events-none absolute left-1/2 top-[25%] size-[640px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(234,4,93,.35),transparent_30%)]" />
 
+      {/* Mobile: the first role reads across the rope, one word either side of it */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-14 z-20 grid grid-cols-[1fr_auto_1fr] items-center gap-5 px-4 md:hidden">
+        <motion.span className={`${word} translate-y-3 justify-self-end text-[clamp(24px,7vw,36px)] ${pink(0, true)}`} {...slide(-40, rowDelay(0))}>{PAIRS[0][0]}</motion.span>
+        {/* The gap the rope runs through */}
+        <span className="w-3" />
+        <motion.span className={`${word} translate-y-8 justify-self-start text-[clamp(24px,7vw,36px)] ${pink(0, false)}`} {...slide(40, rowDelay(0))}>{PAIRS[0][1]}</motion.span>
+      </div>
+
       <div className={`${wrap} relative grid flex-1 grid-cols-1 items-center justify-items-center gap-10 md:grid-cols-[1fr_auto_1fr]`}>
         {/* Desktop: each row reads across the card */}
         <div className="hidden self-stretch justify-self-end pt-[50px] md:flex md:flex-col md:items-end md:justify-between">
@@ -55,11 +63,11 @@ export default function Hero() {
           ))}
         </div>
 
-        {/* Mobile: roles stacked under the card */}
+        {/* Mobile: the other roles stacked under the card (the first one sits either side of the rope, above) */}
         <ul className="flex flex-col items-center gap-4 md:hidden">
-          {PAIRS.map(([first, rest], i) => (
-            <motion.li key={first} className={`${word} text-[clamp(26px,7.5vw,40px)]`} {...slide(0, rowDelay(i))}>
-              <span className={pink(i, true)}>{first}</span> <span className={pink(i, false)}>{rest}</span>
+          {PAIRS.slice(1).map(([first, rest], i) => (
+            <motion.li key={first} className={`${word} text-[clamp(26px,7.5vw,40px)]`} {...slide(0, rowDelay(i + 1))}>
+              <span className={pink(i + 1, true)}>{first}</span> <span className={pink(i + 1, false)}>{rest}</span>
             </motion.li>
           ))}
         </ul>
@@ -67,7 +75,7 @@ export default function Hero() {
         {/* Centred under the card on desktop, under the roles on mobile */}
         <motion.a
           href="#contact"
-          className={`${btnPinkSm} md:col-start-2`}
+          className={`${btnPink} -mt-8 md:col-start-2 md:mt-0`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: rowDelay(PAIRS.length), duration: 0.6 }}
