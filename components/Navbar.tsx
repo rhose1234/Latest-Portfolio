@@ -53,7 +53,7 @@ export default function Navbar() {
               href="#contact"
               className="rounded-full bg-light-red px-5 py-2.5 font-semibold text-crimson transition hover:bg-vivid-pink hover:text-white whitespace-nowrap"
             >
-              Contact me
+              Book a Call
             </a>
           </div>
 
