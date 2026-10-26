@@ -22,32 +22,27 @@ const TONES = [
 /** The socials I post brand content on, linking to my profiles. */
 const PLATFORMS = ["X", "Instagram", "Facebook", "TikTok"].flatMap((name) => SOCIALS.filter((social) => social.name === name));
 
-/** Reasons to hire me, shown under the packages. The first one also lists the brands I've worked with. Icons are 24x24 stroke paths. */
+/** Reasons to hire me, shown under the packages. Icons are 24x24 stroke paths. */
 const REASONS = [
   {
-    title: "Brands already trust me",
-    text: "I've told stories for growing brands, and yours could be next.",
-    icon: "M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z",
+    title: "Authentic & relatable content",
+    text: "Videos that feel like a real recommendation from a friend, not an ad, so your audience trusts what they see.",
+    icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
   },
   {
-    title: "I understand your product",
-    text: "I'm also a builder, so I understand the problem your product solves and can explain it in a way people get.",
-    icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
+    title: "Storytelling-focused videos",
+    text: "Every video tells a story with a strong hook, so people watch to the end and remember your brand.",
+    icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
   },
   {
-    title: "Content that feels real",
-    text: "My videos feel like a recommendation from a friend, not an ad, so people actually watch to the end.",
-    icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z",
+    title: "Natural, engaging on-camera delivery",
+    text: "I'm comfortable on camera and talk the way your customers do, which keeps viewers watching.",
+    icon: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z",
   },
   {
-    title: "One post, four platforms",
-    text: "Your content goes out on X, Instagram, Facebook and TikTok, so it reaches more of your audience.",
-    icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
-  },
-  {
-    title: "Clear and easy to work with",
-    text: "We start with a clarity call, and I keep you in the loop from brief to posting.",
-    icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+    title: "Product-focused videos",
+    text: "Your product stays the star. I show what it does and the problem it solves, clearly and simply.",
+    icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
   },
 ];
 
@@ -198,14 +193,14 @@ export default function RateCardPage() {
                 Why you should hire me<br /> for your next campaign
               </h2>
             </Reveal>
-            {/* The brands card is wide, the rest fill in around it: 2 + 1 on top, 3 below on desktop */}
-            <ul className="mt-10 grid gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
+            {/* Two by two, with the pink cards on the diagonal */}
+            <ul className="mt-10 grid gap-4 md:grid-cols-2 md:gap-5">
               {REASONS.map((reason, i) => (
-                <li key={reason.title} className={i === 0 ? "md:col-span-2" : ""}>
-                  <Reveal delay={(i % 3) * 0.1} className="h-full">
+                <li key={reason.title}>
+                  <Reveal delay={(i % 2) * 0.1} className="h-full">
                     <div
                       className={`group h-full rounded-[24px] p-6 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(30,1,7,.14)] md:p-8 ${
-                        i === 0 ? "bg-[#ffc8d4]" : "border border-crimson/10 bg-white"
+                        i === 0 || i === 3 ? "bg-[#ffc8d4]" : "border border-crimson/10 bg-white"
                       }`}
                     >
                       <span className="flex size-12 items-center justify-center rounded-2xl bg-crimson text-light-red transition duration-300 group-hover:-rotate-6 group-hover:scale-110 group-hover:bg-vivid-pink group-hover:text-white">
@@ -215,24 +210,25 @@ export default function RateCardPage() {
                       </span>
                       <h3 className="mt-6 text-xl font-bold tracking-tight md:text-2xl">{reason.title}</h3>
                       <p className="mt-2 max-w-[44ch] leading-relaxed text-crimson/75">{reason.text}</p>
-                      {i === 0 && (
-                        <nav aria-label="Brands I've worked with" className="mt-6 flex flex-wrap gap-2">
-                          {UGC_BRANDS.map((b) => (
-                            <Link
-                              key={b.slug}
-                              href={`/ugc/${b.slug}`}
-                              className="rounded-full border-2 border-crimson px-4 py-1.5 text-sm font-semibold transition hover:bg-crimson hover:text-light-red"
-                            >
-                              {b.name}
-                            </Link>
-                          ))}
-                        </nav>
-                      )}
                     </div>
                   </Reveal>
                 </li>
               ))}
             </ul>
+            <Reveal>
+              <nav aria-label="Brands I've worked with" className="mt-8 flex flex-wrap items-center gap-2">
+                <span className="mr-2 font-semibold">Brands I&apos;ve worked with:</span>
+                {UGC_BRANDS.map((b) => (
+                  <Link
+                    key={b.slug}
+                    href={`/ugc/${b.slug}`}
+                    className="rounded-full border-2 border-crimson px-4 py-1.5 text-sm font-semibold transition hover:bg-crimson hover:text-light-red"
+                  >
+                    {b.name}
+                  </Link>
+                ))}
+              </nav>
+            </Reveal>
           </div>
 
           {/* Heading on the left (it stays put while the steps scroll past on wide screens), steps joined by a thread on the right */}
