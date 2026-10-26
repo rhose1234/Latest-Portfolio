@@ -16,7 +16,8 @@ export const ME = {
 export type Stat = { n: number; s: string; l: string };
 export type Role = { title: string; description: string };
 export type Project = { title: string; description: string; link: string; image: string; category: 'websites' | 'java' };
-export type UgcVideo = { src: string; cover: string; title?: string };
+export type VideoLinks = { instagram?: string; x?: string; tiktok?: string };
+export type UgcVideo = { src: string; cover?: string; length?: string; title?: string; links?: VideoLinks };
 export type UgcBrand = { slug: string; name: string; description: string; code?: string; codeLink?: string; logo: string; logoBg: string; videos: UgcVideo[] };
 
 export const STATS: Stat[] = [
@@ -59,7 +60,7 @@ export const REVIEWS: Review[] = [
   {
     name: "Olatunbosun Adebola",
     service: "Website",
-    quote: "Her communication, professionalism, and commitment to delivering quality work really stood out. I would highly recommend her to anyone looking for a skilled and reliable website developer. She did an amazing job, and we truly appreciate her effort!",
+    quote: "Working with her to develop our website was an excellent experience. She was professional, creative, patient, and very attentive to our needs throughout the entire process.\n\nShe understood our vision and transformed it into a clean, modern, user-friendly website that we are genuinely proud of. She also paid attention to the little details and was always willing to make adjustments and improvements whenever necessary.\n\nHer communication, professionalism, and commitment to delivering quality work really stood out. I would highly recommend her to anyone looking for a skilled and reliable website developer. She did an amazing job, and we truly appreciate her effort!",
     rating: 5,
     source: "Google",
   },
@@ -105,11 +106,23 @@ export const RATE_NOTES: RateNote[] = [
 ];
 
 /* UGC brands. The description shows on the hanging card and the brand's page; the logo (public/images/ugc/) on the card's back, over logoBg; code is an optional sign-up code, codeLink its referral link.
-   Videos and their covers go in public/videos/<slug>/, added like:
-   { src: "/videos/cleva/1.mp4", cover: "/videos/cleva/1.jpg", title: "Sending money home" } */
+   Videos go in public/videos/. Paste each post's link into links so its icon opens that post; an empty link opens my profile on that platform instead.
+   cover (an image shown before the video plays, in public/images/ugc/covers/), length (shown on the cover) and title are optional, e.g.
+   { src: "/videos/ClevaVideo1.mp4", cover: "/images/ugc/cleva-1.jpg", title: "Sending money home", links: { instagram: "https://…", x: "https://…", tiktok: "https://…" } } */
 export const UGC_BRANDS: UgcBrand[] = [
-  { slug: "cleva", name: "Cleva", description: "A fintech banking app that allows you to receive cross-border payments seamlessly.", code: "ROSE851", codeLink: "https://app.getcleva.com/refer/ROSE851", logo: "/images/ugc/cleva.png", logoBg: "#000000", videos: [] },
-  { slug: "codebridge-hub", name: "Codebridge Hub", description: "An ed-tech platform where you can learn any tech skill.", logo: "/images/ugc/codebridge-hub.png", logoBg: "#ffffff", videos: [] },
-  { slug: "collan", name: "Collan", description: "A community networking platform and shared workspace built for developers, UI/UX designers, tech founders and more.", logo: "/images/ugc/collan.png", logoBg: "#f9f9f9", videos: [] },
+  { slug: "cleva", name: "Cleva", description: "A fintech banking app that allows you to receive cross-border payments seamlessly.", code: "ROSE851", codeLink: "https://app.getcleva.com/refer/ROSE851", logo: "/images/ugc/cleva.png", logoBg: "#000000", videos: [
+    { src: "/videos/ClevaVideo1.mp4", cover: "/images/ugc/covers/ClevaVideo1.jpg", length: "0:50", links: { instagram: "", x: "", tiktok: "" } },
+    { src: "/videos/ClevaVideo2.mp4", cover: "/images/ugc/covers/ClevaVideo2.jpg", length: "1:12", links: { instagram: "", x: "", tiktok: "" } },
+    { src: "/videos/ClevaVideo3.mp4", cover: "/images/ugc/covers/ClevaVideo3.jpg", length: "1:08", links: { instagram: "", x: "", tiktok: "" } },
+    { src: "/videos/ClevaVideo4.mp4", cover: "/images/ugc/covers/ClevaVideo4.jpg", length: "1:22", links: { instagram: "", x: "", tiktok: "" } },
+    { src: "/videos/clevaVideo5.mp4", cover: "/images/ugc/covers/clevaVideo5.jpg", length: "1:35", links: { instagram: "", x: "", tiktok: "" } },
+    { src: "/videos/ClevaVideo6.mp4", cover: "/images/ugc/covers/ClevaVideo6.jpg", length: "1:21", links: { instagram: "", x: "", tiktok: "" } },
+  ] },
+  { slug: "codebridge-hub", name: "Codebridge Hub", description: "An ed-tech platform where you can learn any tech skill.", logo: "/images/ugc/codebridge-hub.png", logoBg: "#ffffff", videos: [
+    { src: "/videos/codebridgehub.mp4", cover: "/images/ugc/covers/codebridgehub.jpg", length: "0:53", links: { instagram: "", x: "", tiktok: "" } },
+  ] },
+  { slug: "collan", name: "Collan", description: "A community networking platform and shared workspace built for developers, UI/UX designers, tech founders and more.", logo: "/images/ugc/collan.png", logoBg: "#f9f9f9", videos: [
+    { src: "/videos/Collan.mp4", cover: "/images/ugc/covers/Collan.jpg", length: "1:10", links: { instagram: "", x: "", tiktok: "" } },
+  ] },
 ];
 /* --------------------------------------------- */
