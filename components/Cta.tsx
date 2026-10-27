@@ -14,7 +14,7 @@ export default function Cta() {
           <ContactForm />
 
           {/* Social Links */}
-          <div className="mt-16 flex justify-center gap-6">
+          <div className="mt-16 flex flex-wrap justify-center gap-3 sm:gap-6">
             {SOCIALS.map((social) => (
               <a
                 key={social.name}
@@ -22,7 +22,7 @@ export default function Cta() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.name}
-                className="flex size-12 items-center justify-center rounded-full bg-light-red/10 text-light-red transition-all hover:bg-vivid-pink hover:text-white"
+                className="flex size-11 shrink-0 items-center justify-center rounded-full bg-light-red/10 text-light-red transition-all hover:bg-vivid-pink hover:text-white sm:size-12"
               >
                 <svg className="size-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d={social.icon} />
