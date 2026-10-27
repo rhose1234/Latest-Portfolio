@@ -30,7 +30,7 @@ export default function About() {
               I had always wanted to study Food Science, but somehow, I ended up studying Computer Science. Then, during my IT year in school, I explored website development for three months and fell in love with tech.
             </p>
             <p>
-              Today, I'm growing as a Software Engineer, building functional stuff on the web using JavaScript, React.js, Next.js, Tailwind CSS, Bootstrap, Java, and MySQL. I also help businesses build websites and web apps that represent their brands, while creating relatable video content that helps brands connect with their audiences.
+              Today, I'm growing as a Software Engineer, building functional stuff on the web using JavaScript, React.js, Next.js, Tailwind CSS, Bootstrap, Java, and MSSQL. I also help businesses build websites and web apps that represent their brands, while creating relatable video content that helps brands connect with their audiences.
             </p>
           </div>
         </Reveal>

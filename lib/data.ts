@@ -31,7 +31,7 @@ export const TOOLS = ["Next.js", "React js", "Javascript", "TypeScript", "Tailwi
 export const UGC_SKILLS = ["Content Creator", "UGC Creator", "User-Generated Content"];
 
 export const ROLES: Role[] = [
-  { title: "Software Engineer", description: "Growing as a software engineer, building functional applications with JavaScript, Java, and MySQL." },
+  { title: "Software Engineer", description: "Growing as a software engineer, building functional applications with JavaScript, Java, and MSSQL." },
   { title: "Web Developer", description: "Helping business owners build functional websites and web apps for their businesses on the internet." },
   { title: "UGC Creator", description: "Creating relatable short-form video content that helps brands connect with their audiences." },
 ];
