@@ -33,7 +33,7 @@ export default function Navbar() {
           </a>
 
           {/* Desktop Nav Links - pushed to the right with increased spacing */}
-          <div className="hidden md:flex items-center gap-6 ml-auto pl-62">
+          <div className="hidden md:flex items-center gap-5 ml-auto pl-10 lg:gap-6 lg:pl-48">
             <a href="#top" className="hover:text-white">
               Home
             </a>
@@ -43,8 +43,11 @@ export default function Navbar() {
             <a href="#work" className="hover:text-white">
               Projects
             </a>
-            <a href="#ugc" className="hover:text-white">
+            <a href="/ugc" className="hover:text-white">
               UGC
+            </a>
+            <a href="/blog" className="hover:text-white">
+              Blog
             </a>
             <a
               href={ME.calendly}
@@ -89,8 +92,11 @@ export default function Navbar() {
             <a href="#work" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white">
               Projects
             </a>
-            <a href="#ugc" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white">
+            <a href="/ugc" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white">
               UGC
+            </a>
+            <a href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-white">
+              Blog
             </a>
             <a
               href={ME.calendly}

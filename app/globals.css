@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Space+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
+/* Styles the text of blog posts (the prose classes) */
+@plugin "@tailwindcss/typography";
 
 /* Brand tokens: usable as bg-crimson, text-light-red, border-vivid-pink, font-sans, animate-marquee ... */
 @theme {
