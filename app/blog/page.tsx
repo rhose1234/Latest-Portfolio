@@ -10,7 +10,7 @@ import { ME } from "@/lib/data";
 import { OPEN_GRAPH } from "@/lib/site";
 import { wrap } from "@/lib/styles";
 
-const TITLE = "Tech Life Journey & The Twist";
+const TITLE = "Tech Life & The Twist";
 const DESCRIPTION = "From my first lines of code to my first time on camera: the wins, the struggles, and the twist that made a developer a storyteller.";
 
 export const metadata: Metadata = {
@@ -48,7 +48,7 @@ export default function BlogPage() {
           <div className="mt-12 grid items-center gap-12 md:mt-16 md:grid-cols-[1fr_auto] lg:gap-20">
             <Reveal>
               <h1 className="text-[clamp(44px,7vw,100px)] font-extrabold leading-[.92] tracking-tighter">
-                Tech Life Journey
+                Tech Life
                 <br />
                 <span className="text-vivid-pink">
                   &amp; The{" "}
