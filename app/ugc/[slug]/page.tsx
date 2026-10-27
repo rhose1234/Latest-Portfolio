@@ -44,7 +44,7 @@ export default function UgcBrandPage({ params }: Props) {
         <div className={`${wrap} relative`}>
           {/* Only as wide as the text and deck together, and centred, so the back link starts where the text does */}
           <div className="mx-auto lg:w-fit">
-            <Link href="/#ugc" className="mb-10 inline-flex md:mb-12 items-center gap-2 text-sm font-semibold transition hover:text-vivid-pink">
+            <Link href="/ugc#ugc" className="mb-10 inline-flex md:mb-12 items-center gap-2 text-sm font-semibold transition hover:text-vivid-pink">
               <svg aria-hidden className="size-4 rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
