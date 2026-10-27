@@ -80,7 +80,7 @@ export default function UgcBrands() {
             front={
               <div className={`${FACE} border-2 border-dashed border-crimson/40`}>
                 <h3 className="text-[clamp(20px,2vw,26px)] font-extrabold leading-tight tracking-tighter">
-                  Your brand could be next on the line
+                  Your brand could be next in line
                 </h3>
                 <a
                   href="#contact"
