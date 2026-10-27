@@ -67,10 +67,9 @@ export default function BlogPage() {
                     <a
                       key={chapter.id}
                       href={`#${chapter.id}`}
-                      className="group inline-flex items-center gap-2 rounded-full border-2 border-crimson px-4 py-2 text-sm font-semibold transition hover:bg-crimson hover:text-light-red"
+                      className="rounded-full border-2 border-crimson px-4 py-2 text-sm font-semibold transition hover:bg-crimson hover:text-light-red"
                     >
                       {chapter.name}
-                      <span className="rounded-full bg-crimson/10 px-2 py-0.5 text-xs transition group-hover:bg-light-red/20">{chapter.posts.length}</span>
                     </a>
                   ))}
                 </nav>
