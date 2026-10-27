@@ -33,7 +33,7 @@ export default function NotFound() {
         <Link href="/" className={btnPink}>
           Back home
         </Link>
-        <Link href="/rate-card" className={btnGhostLight}>
+        <Link href="/ugc" className={btnGhostLight}>
           See my UGC rate card
         </Link>
       </div>

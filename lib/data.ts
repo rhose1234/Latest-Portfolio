@@ -87,7 +87,7 @@ export const REVIEWS: Review[] = [
   },
 ];
 
-/* Your UGC rate card, shown at /rate-card. While RATES is empty the page says rates are on request.
+/* Your UGC rate card, shown on the UGC page (/ugc). While RATES is empty the page says rates are on request.
    Add a package like: { name: "Starter", price: "₦50,000", description: "One video to test the waters", includes: ["1 UGC video (up to 60s)", "1 revision"], featured: false } */
 export type RatePackage = { name: string; price: string; description?: string; includes: string[]; featured?: boolean };
 export const RATES: RatePackage[] = [

@@ -6,7 +6,8 @@ import Footer from "@/components/Footer";
 import Photo from "@/components/ui/Photo";
 import Reveal from "@/components/ui/Reveal";
 import TiltCard from "@/components/ui/TiltCard";
-import { ME, RATES, RATE_NOTES, UGC_BRANDS, type RatePackage } from "@/lib/data";
+import UgcBrands from "@/components/UgcBrands";
+import { ME, RATES, RATE_NOTES, type RatePackage } from "@/lib/data";
 import { OPEN_GRAPH, RATE_CARD_DESCRIPTION } from "@/lib/site";
 import { SOCIALS } from "@/lib/socials";
 import { btnPink, wrap } from "@/lib/styles";
@@ -14,8 +15,8 @@ import { btnPink, wrap } from "@/lib/styles";
 export const metadata: Metadata = {
   title: "UGC rate card",
   description: RATE_CARD_DESCRIPTION,
-  alternates: { canonical: "/rate-card" },
-  openGraph: { ...OPEN_GRAPH, url: "/rate-card", title: `UGC rate card | ${ME.name}`, description: RATE_CARD_DESCRIPTION },
+  alternates: { canonical: "/ugc" },
+  openGraph: { ...OPEN_GRAPH, url: "/ugc", title: `UGC rate card | ${ME.name}`, description: RATE_CARD_DESCRIPTION },
   twitter: { card: "summary_large_image", title: `UGC rate card | ${ME.name}`, description: RATE_CARD_DESCRIPTION },
 };
 
@@ -90,21 +91,22 @@ const customLink = mailto("UGC enquiry: ad usage or custom package", [
   "Thanks,",
 ]);
 
-export default function RateCardPage() {
+/** Everything UGC in one place: the rate card hero, the brands I've made videos for, then the packages, booking steps and terms. */
+export default function UgcPage() {
   return (
     <main>
       <header className="relative overflow-hidden bg-crimson-loading pb-20 pt-10 text-light-red md:pb-24">
         <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 size-[640px] rounded-full bg-[radial-gradient(circle,rgba(234,4,93,.35),transparent_40%)]" />
         <div className={`${wrap} relative`}>
-          <Link href="/#ugc" className="inline-flex items-center gap-2 text-sm font-semibold transition hover:text-vivid-pink">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold transition hover:text-vivid-pink">
             <Arrow className="size-4 rotate-180" />
-            Back to brands
+            Back home
           </Link>
 
           <div className="mt-12 grid items-center gap-14 md:mt-16 md:grid-cols-[1.4fr_1fr]">
             <Reveal className="text-center md:text-left">
               <h1 className="text-[clamp(52px,8vw,112px)] font-extrabold uppercase leading-[.88] tracking-tighter text-white">
-                UGC<br />rate card
+                UGC<br />Creator
               </h1>
               <p className="mx-auto mt-6 max-w-[42ch] text-base leading-relaxed text-light-red/80 md:mx-0 md:text-[19px]">
                 I create relatable short-form videos that connect your brand with its audience and turn viewers into customers.
@@ -137,6 +139,8 @@ export default function RateCardPage() {
           </div>
         </div>
       </header>
+
+      <UgcBrands />
 
       <section id="packages" className="scroll-mt-6 py-20">
         <div className={wrap}>
@@ -222,20 +226,6 @@ export default function RateCardPage() {
                 </li>
               ))}
             </ul>
-            <Reveal>
-              <nav aria-label="Brands I've worked with" className="mt-8 flex flex-wrap items-center gap-2">
-                <span className="mr-2 font-semibold">Brands I&apos;ve worked with:</span>
-                {UGC_BRANDS.map((b) => (
-                  <Link
-                    key={b.slug}
-                    href={`/ugc/${b.slug}`}
-                    className="rounded-full border-2 border-crimson px-4 py-1.5 text-sm font-semibold transition hover:bg-crimson hover:text-light-red"
-                  >
-                    {b.name}
-                  </Link>
-                ))}
-              </nav>
-            </Reveal>
           </div>
 
           {/* Heading on the left (it stays put while the steps scroll past on wide screens), steps joined by a thread on the right */}

@@ -20,7 +20,7 @@ const PRAISE = [
 /** Quick replies a visitor can tap once the reviews are in. I answer each with a way to get started. */
 const REPLIES = [
   { ask: "I need a website", answer: "Love that! Tell me about your business and I'll get back to you.", cta: { label: "Send me a message", href: "#contact" } },
-  { ask: "I need UGC videos", answer: "Yes! Here are my packages and how booking works.", cta: { label: "See my UGC rate card", href: "/rate-card" } },
+  { ask: "I need UGC videos", answer: "Yes! Here are my packages and how booking works.", cta: { label: "See my UGC rate card", href: "/ugc" } },
   { ask: "Can we hop on a call?", answer: "Of course! Pick a time that works for you.", cta: { label: "Book a call", href: ME.calendly } },
 ];
 
