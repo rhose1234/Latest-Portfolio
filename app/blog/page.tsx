@@ -40,12 +40,14 @@ export default function BlogPage() {
       <header className="relative overflow-hidden pb-16 pt-10 md:pb-20 md:pt-20">
         <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 size-[640px] rounded-full bg-[radial-gradient(circle,rgba(234,4,93,.12),transparent_40%)]" />
         <div className={`${wrap} relative`}>
+          {/* Only as wide as the text and photo together, and centred, so the back link starts where the text does */}
+          <div className="mx-auto lg:w-fit">
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold transition hover:text-vivid-pink">
             <Arrow className="size-4 rotate-180" />
             Back home
           </Link>
 
-          <div className="mt-12 grid items-center gap-12 md:mt-16 md:grid-cols-[1fr_auto] lg:gap-20">
+          <div className="mt-12 grid items-center gap-12 md:mt-16 md:grid-cols-[minmax(0,1fr)_auto] lg:grid-cols-[auto_auto] lg:gap-24 xl:gap-28">
             <Reveal>
               <h1 className="text-[clamp(44px,7vw,100px)] font-extrabold leading-[.92] tracking-tighter">
                 Tech Life
@@ -86,6 +88,7 @@ export default function BlogPage() {
                 <Photo src="/images/about1.jpeg" alt={`${ME.name} taking a mirror selfie`} className="aspect-[4/5] rounded-[4px]" />
               </div>
             </Reveal>
+          </div>
           </div>
         </div>
       </header>
