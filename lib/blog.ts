@@ -13,7 +13,7 @@ import { marked } from "marked";
      coverTop: true                       (optional, crops the cover from its top, e.g. for a screenshot)
      draft: true                          (optional, hides the post completely)
      soon: true                           (optional, shows it on the blog page as Coming soon, without its own page yet)
-     order: 3                             (optional, places a coming-soon card: lower numbers come first)
+     order: 3                             (optional, its place on the timeline: lower numbers come first, coming soon or not)
      section: twist                       (which chapter it goes in: tech, twist or explainers; tech if left out)
      link: https://medium.com/…           (optional, for a post published elsewhere: the card opens it there)
      ---
@@ -46,7 +46,7 @@ function read(file: string): Post & { draft: boolean } {
   };
 }
 
-/** Every post that's out or coming soon: published ones newest first, then the coming-soon ones in their order. */
+/** Every post that's out or coming soon, in story order so the timeline reads in sequence. Posts without an order go last, newest first. */
 export function getPosts(): Post[] {
   let files: string[] = [];
   try {
@@ -57,7 +57,7 @@ export function getPosts(): Post[] {
   return files
     .map(read)
     .filter((post) => !post.draft)
-    .sort((a, b) => Number(a.soon) - Number(b.soon) || (a.soon ? a.order - b.order : b.date.localeCompare(a.date)));
+    .sort((a, b) => a.order - b.order || b.date.localeCompare(a.date));
 }
 
 /** A post that has its own page here, so not one that only links elsewhere or is still coming soon. */
