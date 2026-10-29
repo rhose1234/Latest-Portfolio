@@ -7,8 +7,6 @@ section: tech
 order: 3.5
 ---
 
-Let me tell you how I attended a tech event and came back home with a laptop.
-
 If you've followed my tech journey for a while, you probably know that [having the right resources hasn't always been easy for me](/blog/my-struggles-in-tech).
 
 In my early years in tech, I struggled with owning a good laptop. I needed one to learn, practise, and build projects, but owning one wasn't something I could easily afford.
@@ -34,8 +32,6 @@ When I got the news that I had been shortlisted, I was excited, but I also knew 
 On the day of the event, I was nervous.
 
 In fact, I barely talked to anyone. I was just there, taking everything in and waiting for the raffle draw.
-
-![In the crowd at the She Code Africa Summit 2024](/images/blog/laptop-scholarship-2.webp)
 
 Then it was time.
 

@@ -6,7 +6,7 @@ import Photo from "@/components/ui/Photo";
 import Reveal from "@/components/ui/Reveal";
 import Scribble from "@/components/ui/Scribble";
 import ScrollTimeline from "@/components/ui/ScrollTimeline";
-import { formatDate, getPosts, type Post, type Section } from "@/lib/blog";
+import { CHAPTERS, formatDate, getPosts, type Post } from "@/lib/blog";
 import { ME } from "@/lib/data";
 import { OPEN_GRAPH } from "@/lib/site";
 import { wrap } from "@/lib/styles";
@@ -25,13 +25,6 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: `${TITLE} | ${ME.name}`, description: DESCRIPTION },
 };
 
-/** The blog's chapters, in the order they appear. Each post picks one with "section:" in its file. */
-const CHAPTERS: { id: Section; name: string; blurb: string; tone: string }[] = [
-  { id: "tech", name: "Tech Life", blurb: "How I got into tech, what it's really been like, and the moments that shaped me.", tone: "bg-white" },
-  { id: "twist", name: "The Twist", blurb: "Then came content creation: how a developer ended up on camera, telling stories for brands.", tone: "bg-[#ffc8d4]" },
-  { id: "technical", name: "Technical write-ups", blurb: "Plain-English guides to tech terms people often mix up.", tone: "bg-[#e6ddff]" },
-];
-
 /** The blog: a hero, then each chapter with its posts. Posts come from the Markdown files in content/blog/. */
 export default function BlogPage() {
   const posts = getPosts();
@@ -41,18 +34,20 @@ export default function BlogPage() {
 
   return (
     <main>
-      <header className="relative overflow-hidden pb-16 pt-10 md:pb-20 md:pt-20">
+      {/* Fills the screen: Back home at the top, the heading and photo centred in the space below it */}
+      <header className="relative flex min-h-svh flex-col overflow-hidden pb-16 pt-10 md:pb-20 md:pt-20">
         <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 size-[640px] rounded-full bg-[radial-gradient(circle,rgba(234,4,93,.12),transparent_40%)]" />
-        <div className={`${wrap} relative`}>
+        <div className={`${wrap} relative flex flex-1 flex-col`}>
           {/* The same centred column as the timeline below, so everything starts from one left edge */}
-          <div className={COLUMN}>
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold transition hover:text-vivid-pink">
+          <div className={`${COLUMN} flex w-full flex-1 flex-col`}>
+          <Link href="/" className="inline-flex items-center gap-2 self-start text-sm font-semibold transition hover:text-vivid-pink">
             <Arrow className="size-4 rotate-180" />
             Back home
           </Link>
 
-          <div className="mt-12 grid items-center gap-12 md:mt-16 md:grid-cols-[minmax(0,1fr)_auto] lg:justify-between lg:gap-16">
-            <Reveal>
+          <div className="my-auto grid items-center gap-12 pt-12 md:pt-16 md:grid-cols-[minmax(0,1fr)_auto] lg:justify-between lg:gap-16">
+            {/* Centred on phones, where the photo sits under it; beside the photo from tablets up */}
+            <Reveal className="text-center md:text-left">
               <h1 className="text-[clamp(44px,7vw,100px)] font-extrabold leading-[.92] tracking-tighter">
                 Tech Life
                 <br />
@@ -64,26 +59,11 @@ export default function BlogPage() {
                   </span>
                 </span>
               </h1>
-              <p className="mt-8 max-w-[46ch] text-base leading-relaxed text-crimson/75 md:text-[19px]">{DESCRIPTION}</p>
-
-              {/* Jump to a chapter */}
-              {chapters.length > 1 && (
-                <nav aria-label="Chapters" className="mt-8 flex flex-wrap gap-2">
-                  {chapters.map((chapter) => (
-                    <a
-                      key={chapter.id}
-                      href={`#${chapter.id}`}
-                      className="rounded-full border-2 border-crimson px-4 py-2 text-sm font-semibold transition hover:bg-crimson hover:text-light-red"
-                    >
-                      {chapter.name}
-                    </a>
-                  ))}
-                </nav>
-              )}
+              <p className="mx-auto mt-8 max-w-[46ch] text-base leading-relaxed text-crimson/75 md:mx-0 md:text-[19px]">{DESCRIPTION}</p>
             </Reveal>
 
             {/* A snapshot, taped on like a photo in a journal */}
-            <Reveal delay={0.15} className="relative mx-auto hidden w-[260px] md:block lg:w-[300px]">
+            <Reveal delay={0.15} className="relative mx-auto w-[220px] sm:w-[240px] md:w-[260px] lg:w-[300px]">
               <div className="rotate-3 rounded-[10px] border border-crimson/10 bg-white p-3 pb-12 shadow-[0_24px_50px_rgba(30,1,7,.18)]">
                 <span
                   aria-hidden
@@ -103,27 +83,49 @@ export default function BlogPage() {
           <ScrollTimeline className={COLUMN}>
             {chapters.map((chapter) => (
               <section key={chapter.id} id={chapter.id} aria-labelledby={`${chapter.id}-title`} className="scroll-mt-8 pb-16 last:pb-0 md:pb-20">
-                <Reveal className="relative pl-16 md:pl-20">
-                  <span aria-hidden className="absolute left-0 top-0 flex size-10 items-center justify-center rounded-full bg-vivid-pink shadow-[0_0_0_6px_rgba(234,4,93,.15)] md:size-12">
+                {/* On wide screens the marker sits on the middle line, with the heading centred under it */}
+                <Reveal className="relative pl-16 md:pl-20 lg:pl-0 lg:pt-16 lg:text-center">
+                  <span aria-hidden className="absolute left-0 top-0 flex size-10 items-center justify-center rounded-full bg-vivid-pink shadow-[0_0_0_6px_rgba(234,4,93,.15)] md:size-12 lg:left-1/2 lg:-translate-x-1/2">
                     <span className="size-3 rounded-full bg-white" />
                   </span>
-                  <h2 id={`${chapter.id}-title`} className="text-[clamp(30px,4.5vw,52px)] font-extrabold leading-none tracking-tighter">
-                    {chapter.name}
-                  </h2>
-                  <p className="mt-3 max-w-[52ch] leading-relaxed text-crimson/70">{chapter.blurb}</p>
+                  {/* The page colour behind the text hides the line where it runs through the heading */}
+                  <div className="lg:relative lg:mx-auto lg:w-fit lg:max-w-[600px] lg:bg-light-red lg:px-6 lg:py-2">
+                    <h2 id={`${chapter.id}-title`} className="text-[clamp(30px,4.5vw,52px)] font-extrabold leading-none tracking-tighter">
+                      {chapter.name}
+                    </h2>
+                  </div>
                 </Reveal>
 
-                <ol className="mt-10 space-y-6 md:space-y-8">
-                  {chapter.posts.map((post) => (
-                    <li key={post.slug} className="relative pl-16 md:pl-20">
+                {/* One column beside the line on phones; on wide screens stories alternate either side of it,
+                    the right-hand ones dropped a little so the two sides interleave */}
+                <ol className={`mt-10 space-y-6 md:space-y-8 lg:grid lg:grid-cols-2 lg:gap-x-24 lg:gap-y-10 lg:space-y-0 ${chapter.posts.length % 2 === 0 ? "lg:pb-16" : ""}`}>
+                  {chapter.posts.map((post, i) => (
+                    <li key={post.slug} className={`relative pl-16 md:pl-20 lg:pl-0 ${i % 2 ? "lg:translate-y-16" : ""}`}>
                       {/* This story's dot on the line */}
-                      <span aria-hidden className="absolute left-3 top-8 size-4 rounded-full border-[3px] border-vivid-pink bg-light-red md:left-4" />
+                      <span
+                        aria-hidden
+                        className={`absolute left-3 top-8 size-4 rounded-full border-[3px] border-vivid-pink bg-light-red md:left-4 lg:top-8 ${i % 2 ? "lg:-left-14" : "lg:-right-14 lg:left-auto"}`}
+                      />
                       <Reveal>
                         <StoryCard post={post} tone={chapter.tone} />
                       </Reveal>
                     </li>
                   ))}
                 </ol>
+
+                {chapter.more && (
+                  <Reveal className="mt-12 pl-16 md:pl-20 lg:mt-20 lg:pl-0 lg:text-center">
+                    <a
+                      href={chapter.more.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 rounded-full border-2 border-crimson bg-light-red px-5 py-2.5 font-semibold transition hover:bg-crimson hover:text-light-red"
+                    >
+                      {chapter.more.label}
+                      <Arrow className="size-4 -rotate-45 transition-transform group-hover:translate-x-0.5" />
+                    </a>
+                  </Reveal>
+                )}
               </section>
             ))}
           </ScrollTimeline>
@@ -138,39 +140,27 @@ export default function BlogPage() {
   );
 }
 
-/** A story on the timeline: its photo on the left (when it has one), then the title and teaser.
+/** A story on the timeline: the date, title and the first two lines of the story. Its photo is saved for the story's own page.
     Published stories link to their page, or to Medium; coming-soon ones aren't clickable yet. */
 function StoryCard({ post, tone }: { post: Post; tone: string }) {
   const external = Boolean(post.link);
-  const card = `group grid overflow-hidden rounded-[24px] border border-crimson/10 shadow-[0_12px_30px_rgba(30,1,7,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(30,1,7,.14)] ${
-    post.cover ? "sm:grid-cols-[minmax(0,240px)_1fr] md:grid-cols-[280px_1fr]" : ""
-  } ${tone}`;
+  const card = `group block rounded-[20px] border border-crimson/10 shadow-[0_10px_24px_rgba(30,1,7,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(30,1,7,.14)] ${tone}`;
 
   const body = (
     <>
-      {post.cover && (
-        <div className="relative aspect-[16/10] overflow-hidden sm:aspect-auto sm:min-h-[200px]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={post.cover}
-            alt=""
-            loading="lazy"
-            className={`absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.05] ${post.coverTop ? "object-top" : ""}`}
-          />
-        </div>
-      )}
-      <div className="flex flex-col justify-center p-6 md:p-8">
+      <div className="flex flex-col justify-center p-5 md:p-6">
         {post.soon ? (
           <span className="self-start rounded-full bg-crimson px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-light-red">Coming soon</span>
         ) : (
           <p className="text-sm text-crimson/60">
-            {formatDate(post.date)} · {post.minutes} min read
+            {/* A Medium post's text isn't here to time, so just say where it is */}
+            {formatDate(post.date)} · {external ? "On Medium" : `${post.minutes} min read`}
           </p>
         )}
-        <h3 className="mt-3 text-[clamp(20px,2.2vw,28px)] font-extrabold leading-tight tracking-tighter">{post.title}</h3>
-        {post.description && <p className="mt-2 leading-relaxed text-crimson/70">{post.description}</p>}
+        <h3 className="mt-2 text-[clamp(18px,1.8vw,22px)] font-extrabold leading-tight tracking-tighter">{post.title}</h3>
+        {post.excerpt && <p className="mt-2 line-clamp-2 text-[15px] leading-relaxed text-crimson/70">{post.excerpt}</p>}
         {!post.soon && (
-          <span className="mt-5 inline-flex items-center gap-1 self-start font-semibold underline decoration-2 underline-offset-4 transition group-hover:text-vivid-pink">
+          <span className="mt-4 inline-flex items-center gap-1 self-start font-semibold underline decoration-2 underline-offset-4 transition group-hover:text-vivid-pink">
             {external ? "Read on Medium" : "Read story"}
             <Arrow className={`size-4 transition-transform group-hover:translate-x-0.5 ${external ? "-rotate-45" : ""}`} />
           </span>

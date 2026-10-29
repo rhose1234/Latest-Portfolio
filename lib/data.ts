@@ -9,6 +9,7 @@ export const ME = {
   linkedin: "https://www.linkedin.com/in/rose-marvelous/",
   facebook: "https://web.facebook.com/profile.php?id=100070538305621",
   tiktok: "https://www.tiktok.com/@marvelousrose02",
+  medium: "https://medium.com/@marvelousrhose",
   email: "himarvelousrose@gmail.com",
   calendly: "https://calendly.com/marvelousrhose",
 };

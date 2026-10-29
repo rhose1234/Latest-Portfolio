@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import matter from "gray-matter";
 import { marked } from "marked";
+import { ME } from "@/lib/data";
 
 /* Blog posts are Markdown files in content/blog/. The file name is the post's address: my-first-year.md -> /blog/my-first-year.
    Each starts with a few lines between --- marks:
@@ -23,7 +24,33 @@ const FOLDER = join(process.cwd(), "content/blog");
 
 export type Section = "tech" | "twist" | "technical";
 
-export type Post = { slug: string; section: Section; title: string; date: string; description: string; cover?: string; coverTop: boolean; link?: string; soon: boolean; order: number; minutes: number; html: string };
+/** The blog's chapters, in the order they appear. Each post picks one with "section:" in its file.
+    A chapter with "more" ends with a link to where the rest of its posts live. */
+export const CHAPTERS: { id: Section; name: string; tone: string; more?: { label: string; href: string } }[] = [
+  { id: "tech", name: "Tech Life", tone: "bg-white" },
+  { id: "twist", name: "The Twist", tone: "bg-[#ffc8d4]" },
+  {
+    id: "technical",
+    name: "Technical write-ups",
+    tone: "bg-[#e6ddff]",
+    more: { label: "Read more on Medium", href: ME.medium },
+  },
+];
+
+export type Post = { slug: string; section: Section; title: string; date: string; description: string; cover?: string; coverTop: boolean; link?: string; soon: boolean; order: number; minutes: number; excerpt: string; html: string };
+
+/** The opening of a post as plain text, for the short preview on its card. Empty for posts with no text here yet. */
+function excerpt(markdown: string) {
+  return markdown
+    .replace(/<!--[\s\S]*?-->/g, "") // notes left in coming-soon posts
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "") // photos
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links keep their words
+    .replace(/^#+\s.*$/gm, "") // headings
+    .replace(/[*_`>]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 300);
+}
 
 function read(file: string): Post & { draft: boolean } {
   const { data, content } = matter(readFileSync(join(FOLDER, file), "utf-8"));
@@ -41,6 +68,7 @@ function read(file: string): Post & { draft: boolean } {
     soon: Boolean(data.soon),
     order: Number(data.order ?? 99),
     minutes: Math.max(1, Math.round(content.split(/\s+/).filter(Boolean).length / 200)),
+    excerpt: excerpt(content),
     // With async off, marked returns the HTML straight away; its type just doesn't know that
     html: marked.parse(content, { async: false }) as string,
   };

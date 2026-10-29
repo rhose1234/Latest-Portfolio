@@ -39,7 +39,8 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
+  /* Positioned so framer-motion can measure scroll progress against the page (the blog timeline line) */
+  html { position: relative; scroll-behavior: smooth; }
   body { background: var(--color-light-red); color: var(--color-crimson); }
   /* Outfit's regular weight reads heavy in running text, so paragraphs use Light. Anything given a weight class keeps it. */
   p, li, blockquote, dd { font-weight: 300; }
