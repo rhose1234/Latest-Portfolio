@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 const CHAPTERS: { id: Section; name: string; blurb: string; tone: string }[] = [
   { id: "tech", name: "Tech Life", blurb: "How I got into tech, what it's really been like, and the moments that shaped me.", tone: "bg-white" },
   { id: "twist", name: "The Twist", blurb: "Then came content creation: how a developer ended up on camera, telling stories for brands.", tone: "bg-[#ffc8d4]" },
-  { id: "explainers", name: "Explainers", blurb: "Plain-English guides to tech terms people often mix up.", tone: "bg-[#e6ddff]" },
+  { id: "technical", name: "Technical write-ups", blurb: "Plain-English guides to tech terms people often mix up.", tone: "bg-[#e6ddff]" },
 ];
 
 /** The blog: a hero, then each chapter with its posts. Posts come from the Markdown files in content/blog/. */

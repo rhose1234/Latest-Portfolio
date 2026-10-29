@@ -14,14 +14,14 @@ import { marked } from "marked";
      draft: true                          (optional, hides the post completely)
      soon: true                           (optional, shows it on the blog page as Coming soon, without its own page yet)
      order: 3                             (optional, its place on the timeline: lower numbers come first, coming soon or not)
-     section: twist                       (which chapter it goes in: tech, twist or explainers; tech if left out)
+     section: twist                       (which chapter it goes in: tech, twist or technical; tech if left out)
      link: https://medium.com/…           (optional, for a post published elsewhere: the card opens it there)
      ---
    Then the post itself in Markdown. Files starting with _ (like _example.md) are never published. */
 
 const FOLDER = join(process.cwd(), "content/blog");
 
-export type Section = "tech" | "twist" | "explainers";
+export type Section = "tech" | "twist" | "technical";
 
 export type Post = { slug: string; section: Section; title: string; date: string; description: string; cover?: string; coverTop: boolean; link?: string; soon: boolean; order: number; minutes: number; html: string };
 
@@ -29,7 +29,7 @@ function read(file: string): Post & { draft: boolean } {
   const { data, content } = matter(readFileSync(join(FOLDER, file), "utf-8"));
   return {
     slug: file.replace(/\.md$/, ""),
-    section: (["tech", "twist", "explainers"].includes(data.section) ? data.section : "tech") as Section,
+    section: (["tech", "twist", "technical"].includes(data.section) ? data.section : "tech") as Section,
     title: String(data.title ?? "Untitled"),
     // YAML turns 2026-11-02 into a Date, so normalise it back to the plain date
     date: data.date instanceof Date ? data.date.toISOString().slice(0, 10) : String(data.date ?? ""),

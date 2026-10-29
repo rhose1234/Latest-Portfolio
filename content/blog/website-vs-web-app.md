@@ -3,7 +3,7 @@ title: The difference between a website and a web app
 date: 2026-10-27
 description: What makes a website different from a web app, and which one your business needs.
 soon: true
-section: explainers
+section: technical
 order: 10
 ---
 

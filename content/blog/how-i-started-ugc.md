@@ -4,6 +4,7 @@ date: 2026-10-28
 description: It didn't start with me looking for UGC. It started when Cleva reached out about the content I was already making.
 section: twist
 order: 7
+draft: true
 ---
 
 Before you become a UGC creator, I believe you have to understand content creation first. You need to get comfortable with creating content, showing up, and putting yourself out there.
