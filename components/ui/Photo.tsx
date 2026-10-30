@@ -1,17 +1,20 @@
 "use client";
+import Image from "next/image";
 
-type PhotoProps = { src: string; alt?: string; className?: string };
+/** sizes says how wide the photo shows, so phones get a small file. priority is for a photo that's on screen as the page opens. */
+type PhotoProps = { src: string; alt?: string; className?: string; sizes: string; priority?: boolean };
 
 /** Image with a pink gradient fallback while the file is missing. */
-export default function Photo({ src, alt = "", className = "" }: PhotoProps) {
+export default function Photo({ src, alt = "", className = "", sizes, priority = false }: PhotoProps) {
   return (
     <div className={`relative overflow-hidden bg-gradient-to-br from-vivid-pink to-light-red ${className}`}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={src}
         alt={alt}
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover"
+        fill
+        sizes={sizes}
+        priority={priority}
+        className="object-cover"
         onError={(e) => (e.currentTarget.style.display = "none")}
       />
     </div>

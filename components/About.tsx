@@ -10,7 +10,7 @@ export default function About() {
       <div className={`${wrap} grid items-center gap-16 md:grid-cols-[1fr_1.1fr]`}>
         <Reveal>
           <div className="relative h-[420px] md:h-[520px]">
-            <Photo src="/images/about2.jpeg" alt={`${ME.name} smiling at a desk with a laptop and sticky notes`} className="absolute inset-0 rounded-[28px] shadow-[0_30px_60px_rgba(30,1,7,.2)] object-cover w-full h-full" />
+            <Photo src="/images/about2.jpeg" sizes="(min-width: 768px) 520px, 100vw" alt={`${ME.name} smiling at a desk with a laptop and sticky notes`} className="absolute inset-0 rounded-[28px] shadow-[0_30px_60px_rgba(30,1,7,.2)] object-cover w-full h-full" />
           </div>
         </Reveal>
 

@@ -10,7 +10,7 @@ import UgcBrands from "@/components/UgcBrands";
 import { ME, RATES, RATE_NOTES, type RatePackage } from "@/lib/data";
 import { OPEN_GRAPH, RATE_CARD_DESCRIPTION } from "@/lib/site";
 import { SOCIALS } from "@/lib/socials";
-import { btnPink, wrap } from "@/lib/styles";
+import { btnPink, riseIn, wrap } from "@/lib/styles";
 
 export const metadata: Metadata = {
   title: "UGC rate card",
@@ -104,7 +104,7 @@ export default function UgcPage() {
           </Link>
 
           <div className="mt-12 grid items-center gap-14 md:mt-16 md:grid-cols-[1.4fr_1fr]">
-            <Reveal className="text-center md:text-left">
+            <div className="rise-in text-center md:text-left" style={riseIn()}>
               <h1 className="text-[clamp(52px,8vw,112px)] font-extrabold uppercase leading-[.88] tracking-tighter text-white">
                 UGC<br />Creator
               </h1>
@@ -127,15 +127,15 @@ export default function UgcPage() {
                   </a>
                 ))}
               </div>
-            </Reveal>
+            </div>
 
-            <Reveal delay={0.15} className="relative mx-auto w-full max-w-[260px] md:max-w-[360px]">
-              <Photo src="/images/hero.jpg" alt={`Portrait of ${ME.name}`} className="aspect-[4/5] rotate-2 rounded-[28px] shadow-[0_30px_60px_rgba(0,0,0,.35)]" />
+            <div className="rise-in relative mx-auto w-full max-w-[260px] md:max-w-[360px]" style={riseIn(0.15)}>
+              <Photo src="/images/hero.jpg" sizes="(min-width: 768px) 360px, 260px" priority alt={`Portrait of ${ME.name}`} className="aspect-[4/5] rotate-2 rounded-[28px] shadow-[0_30px_60px_rgba(0,0,0,.35)]" />
               {/* An oval sticker like the one on the printed rate card, bobbing gently */}
               <span className="absolute -left-6 top-6 -rotate-12 animate-float rounded-[50%] border-2 border-vivid-pink bg-white px-6 py-3 text-base font-bold uppercase tracking-wide text-crimson shadow-lg md:-left-10 md:text-lg">
                 Open for collabs
               </span>
-            </Reveal>
+            </div>
           </div>
         </div>
       </header>

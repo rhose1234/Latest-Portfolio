@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 /* Shared Tailwind class strings */
 export const wrap = "mx-auto w-full max-w-[1200px] px-7";
 
@@ -15,3 +17,6 @@ export const btnPinkSm =
 
 export const btnGhostLight =
   "inline-block rounded-full border-2 border-light-red px-7 py-4 font-semibold text-light-red transition hover:-translate-y-0.5 hover:bg-light-red hover:text-crimson";
+
+/** Inline style for a .rise-in element: how long it waits (seconds) and how far (px) it moves from. */
+export const riseIn = (delay = 0, x = 0, y = 36) => ({ "--delay": `${delay}s`, "--from-x": `${x}px`, "--from-y": `${y}px` }) as CSSProperties;

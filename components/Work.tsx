@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import Image from "next/image";
 import { WORK, type Project } from "@/lib/data";
 import { wrap } from "@/lib/styles";
 
@@ -19,10 +20,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         className="group grid overflow-hidden rounded-[28px] bg-crimson text-light-red shadow-[0_-12px_40px_rgba(30,1,7,.18)] md:grid-cols-[1fr_1.5fr]"
       >
         <div className="overflow-hidden bg-[#efedf0] md:order-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={project.image}
             alt={`${project.title} website`}
+            width={1600}
+            height={1000}
+            sizes="(min-width: 1200px) 690px, (min-width: 768px) 60vw, 100vw"
             className="aspect-[16/10] h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
           />
         </div>

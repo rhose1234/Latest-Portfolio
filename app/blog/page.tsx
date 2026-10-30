@@ -9,7 +9,7 @@ import ScrollTimeline from "@/components/ui/ScrollTimeline";
 import { CHAPTERS, formatDate, getPosts, type Post } from "@/lib/blog";
 import { ME } from "@/lib/data";
 import { OPEN_GRAPH } from "@/lib/site";
-import { wrap } from "@/lib/styles";
+import { riseIn, wrap } from "@/lib/styles";
 
 /** The column the hero and the timeline share, so they line up. */
 const COLUMN = "mx-auto max-w-[1000px]";
@@ -47,12 +47,13 @@ export default function BlogPage() {
 
           <div className="my-auto grid items-center gap-12 pt-12 md:pt-16 md:grid-cols-[minmax(0,1fr)_auto] lg:justify-between lg:gap-16">
             {/* Centred on phones, where the photo sits under it; beside the photo from tablets up */}
-            <Reveal className="text-center md:text-left">
+            <div className="rise-in text-center md:text-left" style={riseIn()}>
               <h1 className="text-[clamp(44px,7vw,100px)] font-extrabold leading-[.92] tracking-tighter">
-                Tech Life
+                {/* The & ends the first line on phones and starts the second from tablets up */}
+                Tech Life<span className="text-vivid-pink md:hidden"> &amp;</span>
                 <br />
                 <span className="text-vivid-pink">
-                  &amp; The{" "}
+                  <span className="hidden md:inline">&amp; </span>The{" "}
                   <span className="relative inline-block">
                     Twist
                     <Scribble className="absolute -bottom-3 left-0 h-3 w-full md:-bottom-4 md:h-4" />
@@ -60,18 +61,18 @@ export default function BlogPage() {
                 </span>
               </h1>
               <p className="mx-auto mt-8 max-w-[46ch] text-base leading-relaxed text-crimson/75 md:mx-0 md:text-[19px]">{DESCRIPTION}</p>
-            </Reveal>
+            </div>
 
             {/* A snapshot, taped on like a photo in a journal */}
-            <Reveal delay={0.15} className="relative mx-auto w-[220px] sm:w-[240px] md:w-[260px] lg:w-[300px]">
+            <div className="rise-in relative mx-auto w-[220px] sm:w-[240px] md:w-[260px] lg:w-[300px]" style={riseIn(0.15)}>
               <div className="rotate-3 rounded-[10px] border border-crimson/10 bg-white p-3 pb-12 shadow-[0_24px_50px_rgba(30,1,7,.18)]">
                 <span
                   aria-hidden
                   className="absolute -top-3.5 left-1/2 z-10 h-7 w-28 -translate-x-1/2 -rotate-3 bg-[#ffc8d4]/85 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,.45)_0_6px,transparent_6px_12px)] shadow-[0_2px_6px_rgba(30,1,7,.12)]"
                 />
-                <Photo src="/images/about1.jpeg" alt={`${ME.name} taking a mirror selfie`} className="aspect-[4/5] rounded-[4px]" />
+                <Photo src="/images/about1.jpeg" sizes="276px" priority alt={`${ME.name} taking a mirror selfie`} className="aspect-[4/5] rounded-[4px]" />
               </div>
-            </Reveal>
+            </div>
           </div>
           </div>
         </div>

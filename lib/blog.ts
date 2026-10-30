@@ -70,7 +70,8 @@ function read(file: string): Post & { draft: boolean } {
     minutes: Math.max(1, Math.round(content.split(/\s+/).filter(Boolean).length / 200)),
     excerpt: excerpt(content),
     // With async off, marked returns the HTML straight away; its type just doesn't know that
-    html: marked.parse(content, { async: false }) as string,
+    // Photos inside a story only load as the reader nears them
+    html: (marked.parse(content, { async: false }) as string).replaceAll("<img ", '<img loading="lazy" decoding="async" '),
   };
 }
 

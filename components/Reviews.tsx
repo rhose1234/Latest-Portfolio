@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import Reveal from "@/components/ui/Reveal";
 import { GOOGLE_REVIEWS, ME, REVIEWS, type Review } from "@/lib/data";
@@ -362,8 +363,7 @@ function ClientMessage({ review, index, loved, flashing, onLove }: ClientMessage
 function MyMessage({ children }: { children: ReactNode }) {
   return (
     <div className="flex items-end gap-2.5">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/images/hero.jpg" alt="" className="mb-6 size-8 shrink-0 rounded-full object-cover object-top" />
+      <Image src="/images/hero.jpg" alt="" width={32} height={32} className="mb-6 size-8 shrink-0 rounded-full object-cover object-top" />
       <div className="min-w-0 max-w-[85%]">
         <div className="rounded-[20px] rounded-bl-md bg-vivid-pink px-4 py-3 text-[15px] font-medium leading-relaxed text-white">{children}</div>
         <p className="mt-1.5 px-1 text-xs font-bold text-crimson">{ME.name}</p>

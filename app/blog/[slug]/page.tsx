@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Cta from "@/components/Cta";
 import Footer from "@/components/Footer";
 import ReadingProgress from "@/components/ui/ReadingProgress";
-import Reveal from "@/components/ui/Reveal";
 import { CHAPTERS, formatDate, getPost, getPosts, type Post } from "@/lib/blog";
 import { ME } from "@/lib/data";
 import { OPEN_GRAPH } from "@/lib/site";
-import { wrap } from "@/lib/styles";
+import { riseIn, wrap } from "@/lib/styles";
 
 type Props = { params: { slug: string } };
 
@@ -63,7 +63,7 @@ export default function PostPage({ params }: Props) {
             All stories
           </Link>
 
-          <Reveal className="mt-12 md:mt-16">
+          <div className="rise-in mt-12 md:mt-16" style={riseIn()}>
             {chapter && (
               <Link
                 href={`/blog#${chapter.id}`}
@@ -77,8 +77,7 @@ export default function PostPage({ params }: Props) {
 
             {/* Byline */}
             <div className="mt-8 flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/hero.jpg" alt="" className="size-11 shrink-0 rounded-full object-cover object-top ring-2 ring-vivid-pink ring-offset-2 ring-offset-light-red" />
+              <Image src="/images/hero.jpg" alt="" width={44} height={44} priority className="size-11 shrink-0 rounded-full object-cover object-top ring-2 ring-vivid-pink ring-offset-2 ring-offset-light-red" />
               <div className="text-sm leading-snug">
                 <p className="font-semibold">{ME.name}</p>
                 <p className="text-crimson/60">
@@ -86,21 +85,24 @@ export default function PostPage({ params }: Props) {
                 </p>
               </div>
             </div>
-          </Reveal>
+          </div>
           </div>
         </header>
 
         {/* The cover opens the story */}
         {post.cover && (
           <div className={`${wrap} relative mt-12 md:mt-14`}>
-            <Reveal className={TEXT}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className={`rise-in ${TEXT}`} style={riseIn(0.15)}>
+              <Image
                 src={post.cover}
                 alt=""
+                width={1440}
+                height={900}
+                sizes="(min-width: 800px) 720px, 100vw"
+                priority
                 className={`aspect-[16/10] w-full rounded-[28px] object-cover shadow-[0_30px_60px_rgba(30,1,7,.18)] md:aspect-[2/1] ${post.coverTop ? "object-top" : ""}`}
               />
-            </Reveal>
+            </div>
           </div>
         )}
 
@@ -145,8 +147,7 @@ function StoryLink({ post, label }: { post: Post; label: string }) {
       className="group flex items-center gap-4"
     >
       {post.cover && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={post.cover} alt="" loading="lazy" className={`size-20 shrink-0 rounded-[14px] object-cover transition duration-300 group-hover:scale-[1.04] ${post.coverTop ? "object-top" : ""}`} />
+        <Image src={post.cover} alt="" width={80} height={80} className={`size-20 shrink-0 rounded-[14px] object-cover transition duration-300 group-hover:scale-[1.04] ${post.coverTop ? "object-top" : ""}`} />
       )}
       <div className="min-w-0">
         <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-vivid-pink">
