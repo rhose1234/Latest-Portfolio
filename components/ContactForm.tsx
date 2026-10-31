@@ -3,7 +3,7 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { btnPink } from "@/lib/styles";
 
 /** Web3Forms access key, from .env.local. It's a public key, made to be used in the browser. */
-const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+const ACCESS_KEY = process.env.NEXT_WEB3FORMS_ACCESS_KEY;
 
 type Field = "name" | "email" | "message";
 type Values = Record<Field, string>;
