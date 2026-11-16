@@ -118,6 +118,7 @@ export const UGC_BRANDS: UgcBrand[] = [
     { src: "/videos/ClevaVideo4.mp4", cover: "/images/ugc/covers/ClevaVideo4.jpg", length: "1:22", links: { instagram: "", x: "", tiktok: "" } },
     { src: "/videos/clevaVideo5.mp4", cover: "/images/ugc/covers/clevaVideo5.jpg", length: "1:35", links: { instagram: "", x: "", tiktok: "" } },
     { src: "/videos/ClevaVideo6.mp4", cover: "/images/ugc/covers/ClevaVideo6.jpg", length: "1:21", links: { instagram: "", x: "", tiktok: "" } },
+    { src: "/videos/ClevaVideo7.mp4", cover: "/images/ugc/covers/ClevaVideo7.jpg", length: "0:53", links: { instagram: "", x: "", tiktok: "" } },
   ] },
   { slug: "codebridge-hub", name: "Codebridge Hub", description: "An ed-tech platform where you can learn any tech skill.", logo: "/images/ugc/codebridge-hub.png", logoBg: "#ffffff", videos: [
     { src: "/videos/codebridgehub.mp4", cover: "/images/ugc/covers/codebridgehub.jpg", length: "0:53", links: { instagram: "", x: "", tiktok: "" } },
