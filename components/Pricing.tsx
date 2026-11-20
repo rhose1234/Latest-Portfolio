@@ -14,7 +14,7 @@ const pricingPlans = [
     },
     {
         videos: 2,
-        price: "300,000",
+        price: "250,000",
         features: [
             "2 Edited videos",
             "3 revisions of scripting",
@@ -23,7 +23,7 @@ const pricingPlans = [
     },
     {
         videos: 3,
-        price: "500,000",
+        price: "450,000",
         features: [
             "3 Edited videos",
             "3 revisions of scripting",
