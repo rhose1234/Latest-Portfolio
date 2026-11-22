@@ -92,9 +92,9 @@ export const REVIEWS: Review[] = [
    Add a package like: { name: "Starter", price: "₦50,000", description: "One video to test the waters", includes: ["1 UGC video (up to 60s)", "1 revision"], featured: false } */
 export type RatePackage = { name: string; price: string; description?: string; includes: string[]; featured?: boolean };
 export const RATES: RatePackage[] = [
-  { name: "Basic", price: "₦100,000", includes: ["1 video (15–60 sec)", "1 story upload"] },
-  { name: "Standard", price: "₦200,000", includes: ["2 videos (15–60 sec)", "2 story uploads"] },
-  { name: "Premium", price: "₦400,000", includes: ["3 videos (60–90 sec)", "2 photo posts", "3 story uploads"] },
+  { name: "Basic", price: "₦150,000", includes: ["1 edited video (15–60 sec)", "2 rounds of script revisions per video", "1 story upload"] },
+  { name: "Standard", price: "₦250,000", includes: ["2 edited videos (15–60 sec)", "2 rounds of script revisions per video", "2 story uploads"] },
+  { name: "Premium", price: "₦500,000", includes: ["4 edited videos (60–90 sec)", "2 rounds of script revisions per video", "2 photo posts", "3 story uploads"] },
 ];
 /* Terms shown under the packages, added like: { title: "Turnaround", text: "5–7 working days from the brief." } */
 export type RateNote = { title: string; text: string };

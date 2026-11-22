@@ -11,7 +11,7 @@ export const SITE_DESCRIPTION =
   "Software engineer, web developer and UGC creator. I build websites that work for businesses and make relatable short-form videos that connect brands with their audience.";
 
 export const RATE_CARD_DESCRIPTION =
-  "UGC packages from ₦100,000. Relatable short-form videos that connect your brand with its audience, posted on X, Instagram, Facebook and TikTok.";
+  "UGC packages from ₦150,000. Relatable short-form videos that connect your brand with its audience, posted on X, Instagram, Facebook and TikTok.";
 
 /** Link-preview settings every page shares. A page's own openGraph replaces the layout's rather than adding to it, so pages spread this in. */
 export const OPEN_GRAPH = { type: "website", siteName: "Marvelous Rose", locale: "en_NG" } as const;
